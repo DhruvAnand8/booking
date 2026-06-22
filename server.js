@@ -5,7 +5,7 @@ const http = require('http');
 const { execSync } = require('child_process');
 const express = require('express');
 
-const PORT_HTTP = 8000;
+const PORT_HTTP = process.env.PORT || 8000;
 const PORT_HTTPS = 8443;
 const DB_FILE = path.join(__dirname, 'db.json');
 const CERT_KEY = path.join(__dirname, 'key.pem');
@@ -412,16 +412,19 @@ app.post('/api/system/settings', (req, res) => {
 });
 
 // Start server listening
-try {
-  const options = {
-    key: fs.readFileSync(CERT_KEY),
-    cert: fs.readFileSync(CERT_CRT)
-  };
-  https.createServer(options, app).listen(PORT_HTTPS, () => {
-    console.log(`Secure Server running at: https://localhost:${PORT_HTTPS}/`);
-  });
-} catch (err) {
-  console.error('Error starting HTTPS server, falling back to HTTP only for SSL missing:', err.message);
+// Only start HTTPS locally (when PORT env is not defined by cloud platforms)
+if (!process.env.PORT) {
+  try {
+    const options = {
+      key: fs.readFileSync(CERT_KEY),
+      cert: fs.readFileSync(CERT_CRT)
+    };
+    https.createServer(options, app).listen(PORT_HTTPS, () => {
+      console.log(`Secure Server running at: https://localhost:${PORT_HTTPS}/`);
+    });
+  } catch (err) {
+    console.error('Error starting HTTPS server, falling back to HTTP only for SSL missing:', err.message);
+  }
 }
 
 http.createServer(app).listen(PORT_HTTP, () => {

@@ -1018,9 +1018,9 @@ function openAdminEditBookingModal(bookingId) {
   document.getElementById('admin-booking-user').value = b.empId;
   
   const parts = b.room.split(' ');
-  if (parts.length >= 4) {
+  if (parts.length >= 3) {
     document.getElementById('admin-booking-floor').value = parts[1];
-    document.getElementById('admin-booking-type').value = parts[2] + ' ' + parts[3];
+    document.getElementById('admin-booking-type').value = parts.slice(2).join(' ');
   }
   updateAdminBookResolution();
   
