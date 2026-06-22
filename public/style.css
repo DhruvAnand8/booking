@@ -1861,8 +1861,8 @@ textarea.form-input {
 
 /* Admin Tabs */
 .admin-dashboard-layout .admin-tabs {
-  background: rgba(0, 0, 0, 0.2);
-  border-color: rgba(255, 255, 255, 0.05);
+  background: var(--primary-darker);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .admin-dashboard-layout .admin-tab {
@@ -1875,6 +1875,9 @@ textarea.form-input {
 }
 
 .admin-dashboard-layout .admin-tab.active {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--primary);
   color: var(--white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
+
+
