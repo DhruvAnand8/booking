@@ -1350,17 +1350,18 @@ function applyBranding(settings) {
   
   // Apply theme color variables (with darker shades for the Control Panel)
   const themes = {
-    indigo: { primary: '#4F46E5', dark: '#3730A3', darker: '#1E1B4B', light: '#EEF2FF', glow: 'rgba(79, 70, 229, 0.15)' },
-    emerald: { primary: '#10B981', dark: '#047857', darker: '#064E3B', light: '#ECFDF5', glow: 'rgba(16, 185, 129, 0.15)' },
-    orange: { primary: '#F59E0B', dark: '#B45309', darker: '#78350F', light: '#FFFBEB', glow: 'rgba(245, 158, 11, 0.15)' },
-    crimson: { primary: '#E11D48', dark: '#9F1239', darker: '#4C0519', light: '#FFF1F2', glow: 'rgba(225, 29, 72, 0.15)' },
-    dark: { primary: '#334155', dark: '#1E293B', darker: '#0F172A', light: '#F1F5F9', glow: 'rgba(51, 65, 85, 0.15)' }
+    indigo: { primary: '#4F46E5', dark: '#3730A3', darker: '#1E1B4B', sidebar: '#0e1022', light: '#EEF2FF', glow: 'rgba(79, 70, 229, 0.15)' },
+    emerald: { primary: '#10B981', dark: '#047857', darker: '#064E3B', sidebar: '#051f18', light: '#ECFDF5', glow: 'rgba(16, 185, 129, 0.15)' },
+    orange: { primary: '#F59E0B', dark: '#B45309', darker: '#78350F', sidebar: '#1a110a', light: '#FFFBEB', glow: 'rgba(245, 158, 11, 0.15)' },
+    crimson: { primary: '#E11D48', dark: '#9F1239', darker: '#4C0519', sidebar: '#1d0a0f', light: '#FFF1F2', glow: 'rgba(225, 29, 72, 0.15)' },
+    dark: { primary: '#334155', dark: '#1E293B', darker: '#0F172A', sidebar: '#0b0f19', light: '#F1F5F9', glow: 'rgba(51, 65, 85, 0.15)' }
   };
   
   const activeTheme = themes[settings.theme || 'indigo'] || themes.indigo;
   document.documentElement.style.setProperty('--primary', activeTheme.primary);
   document.documentElement.style.setProperty('--primary-dark', activeTheme.dark);
   document.documentElement.style.setProperty('--primary-darker', activeTheme.darker);
+  document.documentElement.style.setProperty('--sidebar-bg', activeTheme.sidebar);
   document.documentElement.style.setProperty('--primary-light', activeTheme.light);
   document.documentElement.style.setProperty('--primary-glow', activeTheme.glow);
 }

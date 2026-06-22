@@ -337,12 +337,47 @@
   "systemSettings": {
     "globalLockdown": false,
     "gracePeriod": 15,
-    "companyName": "BookMyRoo",
+    "companyName": "BookMyRoom",
     "logoUrl": "",
     "fontFamily": "Plus Jakarta Sans",
-    "theme": "emerald"
+    "theme": "orange"
   },
   "auditLogs": [
+    {
+      "id": 34,
+      "timestamp": "2026-06-22T18:07:12.532Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: orange"
+    },
+    {
+      "id": 33,
+      "timestamp": "2026-06-22T18:06:44.694Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: emerald"
+    },
+    {
+      "id": 32,
+      "timestamp": "2026-06-22T18:06:39.764Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: crimson"
+    },
+    {
+      "id": 31,
+      "timestamp": "2026-06-22T18:06:32.745Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: crimson"
+    },
+    {
+      "id": 30,
+      "timestamp": "2026-06-22T18:06:24.311Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: emerald"
+    },
     {
       "id": 29,
       "timestamp": "2026-06-22T18:05:48.567Z",

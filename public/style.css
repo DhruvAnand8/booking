@@ -71,7 +71,7 @@ body {
 /* SIDEBAR */
 .sidebar {
   width: 260px;
-  background: var(--slate-900);
+  background: var(--sidebar-bg, var(--slate-900));
   color: var(--slate-200);
   display: flex;
   flex-direction: column;
