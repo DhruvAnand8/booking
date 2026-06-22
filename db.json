@@ -337,12 +337,96 @@
   "systemSettings": {
     "globalLockdown": false,
     "gracePeriod": 15,
-    "companyName": "BookMyRoom",
+    "companyName": "BookMyRoo",
     "logoUrl": "",
     "fontFamily": "Plus Jakarta Sans",
-    "theme": "indigo"
+    "theme": "emerald"
   },
   "auditLogs": [
+    {
+      "id": 29,
+      "timestamp": "2026-06-22T18:05:48.567Z",
+      "action": "SETTINGS_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System grace period set to 15 minutes"
+    },
+    {
+      "id": 28,
+      "timestamp": "2026-06-22T18:05:38.471Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: emerald"
+    },
+    {
+      "id": 27,
+      "timestamp": "2026-06-22T18:05:17.715Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: emerald"
+    },
+    {
+      "id": 26,
+      "timestamp": "2026-06-22T18:05:07.416Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: emerald"
+    },
+    {
+      "id": 25,
+      "timestamp": "2026-06-22T18:05:01.890Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: emerald"
+    },
+    {
+      "id": 24,
+      "timestamp": "2026-06-22T18:04:01.850Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: emerald"
+    },
+    {
+      "id": 23,
+      "timestamp": "2026-06-22T18:03:59.883Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: emerald"
+    },
+    {
+      "id": 22,
+      "timestamp": "2026-06-22T18:03:57.084Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: indigo"
+    },
+    {
+      "id": 21,
+      "timestamp": "2026-06-22T18:03:54.017Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: orange"
+    },
+    {
+      "id": 20,
+      "timestamp": "2026-06-22T18:03:51.534Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: orange"
+    },
+    {
+      "id": 19,
+      "timestamp": "2026-06-22T18:03:49.501Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: emerald"
+    },
+    {
+      "id": 18,
+      "timestamp": "2026-06-22T11:27:54.694Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: emerald"
+    },
     {
       "id": 17,
       "timestamp": "2026-06-22T11:27:36.571Z",

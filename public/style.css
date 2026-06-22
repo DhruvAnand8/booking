@@ -100,7 +100,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 4px 12px var(--primary-glow);
 }
 
 .logo-icon svg {
@@ -154,7 +154,7 @@ body {
 
 .nav-item.active {
   color: var(--white);
-  background: rgba(79, 70, 229, 0.15);
+  background: var(--primary-glow);
   box-shadow: inset 3px 0 0 var(--primary);
 }
 
@@ -352,12 +352,12 @@ body {
 .btn-primary {
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: var(--white);
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
+  box-shadow: 0 4px 14px var(--primary-glow);
 }
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35);
+  box-shadow: 0 6px 18px var(--primary-glow);
 }
 
 .btn-primary:active {
@@ -650,7 +650,7 @@ table.timetable {
 .slot-booked {
   background: var(--primary-light);
   color: var(--primary);
-  border: 1px solid rgba(79, 70, 229, 0.2);
+  border: 1px solid var(--primary-glow);
 }
 
 .slot-pending {
@@ -690,7 +690,7 @@ table.timetable {
 }
 
 .legend-available { background: var(--success-light); border: 1px solid rgba(16, 185, 129, 0.2); }
-.legend-booked { background: var(--primary-light); border: 1px solid rgba(79, 70, 229, 0.2); }
+.legend-booked { background: var(--primary-light); border: 1px solid var(--primary-glow); }
 .legend-pending { background: var(--warning-light); border: 1px solid rgba(245, 158, 11, 0.2); }
 .legend-mine { background: #F5F3FF; border: 1px solid rgba(124, 58, 237, 0.2); }
 
@@ -922,7 +922,7 @@ textarea.form-input {
 }
 
 .room-chip.selected .cap {
-  color: rgba(79, 70, 229, 0.7);
+  color: var(--primary);
 }
 
 .approval-card {
