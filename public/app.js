@@ -1316,35 +1316,39 @@ function applyBranding(settings) {
   // Apply font family
   document.body.style.fontFamily = `"${settings.fontFamily || 'Plus Jakarta Sans'}", system-ui, -apple-system, sans-serif`;
   
-  // Apply logo text
+  // Apply logo text (top header brand identity is permanently "BookMyRoom")
   const logoTextEl = document.querySelector('.logo-text');
-  if (logoTextEl) logoTextEl.textContent = settings.companyName || 'BookMyRoom';
+  if (logoTextEl) logoTextEl.textContent = 'BookMyRoom';
   
-  // Apply logo image in top header if present (as a small icon fallback/support)
+  // Apply logo image in top header - always keep the default premium vector mark for BookMyRoom
   const logoIconEl = document.querySelector('.logo-icon');
   if (logoIconEl) {
-    if (settings.logoUrl && settings.logoUrl.trim() !== '') {
-      logoIconEl.classList.add('has-image');
-      logoIconEl.innerHTML = `<img src="${settings.logoUrl.trim()}" style="width:100%; height:100%; object-fit:contain; border-radius:inherit;">`;
-    } else {
-      logoIconEl.classList.remove('has-image');
-      // Restore default vector icon
-      logoIconEl.innerHTML = `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" stroke="white" stroke-width="2" fill="none"/><path d="M9 9h6M9 13h6M9 17h4" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>`;
-    }
+    logoIconEl.classList.remove('has-image');
+    logoIconEl.innerHTML = `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" stroke="white" stroke-width="2" fill="none"/><path d="M9 9h6M9 13h6M9 17h4" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>`;
   }
 
-  // Apply logo image in lower end sidebar branding footer
+  // Apply custom company logo and custom name just beneath Admin Console
   const footerLogoEl = document.getElementById('sidebar-footer-logo');
   const footerLogoImgEl = document.getElementById('sidebar-footer-logo-img');
   const footerLogoTextEl = document.getElementById('sidebar-footer-logo-text');
   if (footerLogoEl && footerLogoImgEl && footerLogoTextEl) {
-    if (settings.logoUrl && settings.logoUrl.trim() !== '') {
-      footerLogoImgEl.src = settings.logoUrl.trim();
-      footerLogoTextEl.textContent = settings.companyName || 'BookMyRoom';
+    const hasCustomName = settings.companyName && settings.companyName.trim() !== '' && settings.companyName !== 'BookMyRoom';
+    const hasCustomLogo = settings.logoUrl && settings.logoUrl.trim() !== '';
+    
+    if (hasCustomName || hasCustomLogo) {
+      if (hasCustomLogo) {
+        footerLogoImgEl.src = settings.logoUrl.trim();
+        footerLogoImgEl.style.display = 'block';
+      } else {
+        footerLogoImgEl.src = '';
+        footerLogoImgEl.style.display = 'none';
+      }
+      footerLogoTextEl.textContent = hasCustomName ? settings.companyName : '';
       footerLogoEl.style.display = 'flex';
     } else {
       footerLogoEl.style.display = 'none';
       footerLogoImgEl.src = '';
+      footerLogoTextEl.textContent = '';
     }
   }
   
@@ -1423,7 +1427,7 @@ function selectThemeDropdown(themeName) {
 }
 
 async function saveBrandingSettings() {
-  const companyName = document.getElementById('sys-company-name').value || 'BookMyRoom';
+  const companyName = document.getElementById('sys-company-name').value || '';
   const logoUrl = document.getElementById('sys-logo-url').value || '';
   const fontFamily = document.getElementById('sys-font-family').value || 'Plus Jakarta Sans';
   const theme = document.getElementById('sys-theme').value || 'indigo';

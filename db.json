@@ -339,10 +339,24 @@
     "gracePeriod": 15,
     "companyName": "BookMyRoom",
     "logoUrl": "",
-    "fontFamily": "Plus Jakarta Sans",
-    "theme": "crimson"
+    "fontFamily": "Outfit",
+    "theme": "indigo"
   },
   "auditLogs": [
+    {
+      "id": 40,
+      "timestamp": "2026-06-22T18:13:35.924Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: indigo"
+    },
+    {
+      "id": 39,
+      "timestamp": "2026-06-22T18:13:33.090Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: crimson"
+    },
     {
       "id": 38,
       "timestamp": "2026-06-22T18:10:44.544Z",
