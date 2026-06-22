@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoomSync — Premium Room Booking & RFID Security Console</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" stroke="white" stroke-width="2" fill="none"/><path d="M9 9h6M9 13h6M9 17h4" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <div class="logo-text">RoomSync</div>
+          <div class="logo-sub">Smart Console</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="showPage('dashboard')" id="nav-dashboard">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" onclick="showPage('book')" id="nav-book">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Book a Room
+      </div>
+      <div class="nav-item" onclick="showPage('timetable')" id="nav-timetable">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M3 10h18M8 2v4M16 2v4M9 16l2 2 4-4"/></svg>
+        Weekly Schedule
+      </div>
+      <div class="nav-item" onclick="showPage('mybookings')" id="nav-mybookings">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        My Bookings
+      </div>
+      <div class="nav-item" onclick="showPage('rfid')" id="nav-rfid">
+        <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="3"/><path d="M7 15V9M10 12V9M13 11V9M16 9v6"/></svg>
+        RFID Lock Sim
+      </div>
+      <div class="nav-item" onclick="showPage('manager')" id="nav-manager">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Manager View
+        <span class="nav-badge" id="pending-count">0</span>
+      </div>
+      <div class="nav-item nav-admin" onclick="showPage('admin')" id="nav-admin" style="display: none;">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Admin Console
+      </div>
+    </nav>
+
+    <!-- Global Lockdown Alert Box in Sidebar -->
+    <div class="lockdown-alert-box" id="lockdown-sidebar-indicator" style="display:none;">
+      <div class="lockdown-alert-glow"></div>
+      <div class="lockdown-alert-text">🔒 LOCKDOWN ACTIVE</div>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="mini-avatar" style="background:#EDE9FE;color:#534AB7;" id="sidebar-avatar">AK</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-name">Arjun Kapoor</div>
+        <div class="user-role" id="sidebar-role">Employee</div>
+      </div>
+      <select class="role-switcher" id="role-select" onchange="switchRole(this.value)">
+        <option value="employee">Employee</option>
+        <option value="manager">Manager</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="page-title">Dashboard</div>
+        <div class="topbar-subtitle" id="page-sub">Monday, 23 June 2026</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-primary" onclick="openBookModal()">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>
+          Quick Booking
+        </button>
+      </div>
+    </div>
+
+    <!-- CONTENT AREA -->
+    <div class="content">
+
+      <!-- DASHBOARD PAGE -->
+      <div id="page-dashboard" class="page active">
+        <div class="stats-row">
+          <div class="stat-card glass">
+            <div class="stat-icon-wrapper blue">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <div>
+              <div class="stat-label">Rooms Registered</div>
+              <div class="stat-value" id="dash-rooms-count">4</div>
+              <div class="stat-sub">Fully Managed</div>
+            </div>
+          </div>
+          <div class="stat-card glass">
+            <div class="stat-icon-wrapper green">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor" stroke-width="2" fill="none"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <div>
+              <div class="stat-label">Active Bookings</div>
+              <div class="stat-value" id="dash-bookings-count">8</div>
+              <div class="stat-sub">Today</div>
+            </div>
+          </div>
+          <div class="stat-card glass">
+            <div class="stat-icon-wrapper orange">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <div>
+              <div class="stat-label">Awaiting Approval</div>
+              <div class="stat-value" id="dash-pending">3</div>
+              <div class="stat-sub">Pending Review</div>
+            </div>
+          </div>
+          <div class="stat-card glass">
+            <div class="stat-icon-wrapper purple">
+              <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="3" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>
+            </div>
+            <div>
+              <div class="stat-label">Active Swipes</div>
+              <div class="stat-value" id="dash-checkedin">2</div>
+              <div class="stat-sub">Checked-in Now</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Today Timetable Overview -->
+        <div class="timetable-wrap glass">
+          <div class="timetable-header">
+            <div class="timetable-title">Today's Live Room Status Overview</div>
+            <div class="timetable-date-text">Monday, 23 June</div>
+          </div>
+          <div class="timetable-grid">
+            <table class="timetable">
+              <thead>
+                <tr id="today-grid-header">
+                  <th class="time-col">Time</th>
+                  <th>Boardroom A</th>
+                  <th>Meeting Rm B</th>
+                  <th>Conf Room C</th>
+                  <th>Training Hall</th>
+                </tr>
+              </thead>
+              <tbody id="today-grid-body"></tbody>
+            </table>
+          </div>
+          <div class="timetable-legend">
+            <div class="legend-item"><div class="legend-dot legend-available"></div>Available</div>
+            <div class="legend-item"><div class="legend-dot legend-booked"></div>Booked</div>
+            <div class="legend-item"><div class="legend-dot legend-pending"></div>Pending</div>
+            <div class="legend-item"><div class="legend-dot legend-mine"></div>Your booking</div>
+          </div>
+        </div>
+
+        <!-- Recent bookings -->
+        <div class="section-header">
+          <div class="section-title">Recent Activity Feed</div>
+        </div>
+        <div class="table-card glass">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Room</th>
+                <th>Date & Time</th>
+                <th>Purpose</th>
+                <th>Status</th>
+                <th>Check-in Status</th>
+              </tr>
+            </thead>
+            <tbody id="bookings-list"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BOOK A ROOM PAGE -->
+      <div id="page-book" class="page">
+        <div class="page-form-wrapper glass">
+          <div class="form-hero">
+            <h2>Reserve a Meeting Room</h2>
+            <p>Schedule a room and send a request for manager approval instantly.</p>
+          </div>
+
+          <div class="form-container">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Select Floor</label>
+                <select class="form-input" id="book-floor-select" onchange="updateBookRoomResolution()">
+                  <option value="1">Floor 1</option>
+                  <option value="2">Floor 2</option>
+                  <option value="3">Floor 3</option>
+                  <option value="4">Floor 4</option>
+                  <option value="5">Floor 5</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Room Type</label>
+                <select class="form-input" id="book-type-select" onchange="updateBookRoomResolution()">
+                  <option value="Conference Room">Conference Room</option>
+                  <option value="Meeting Room">Meeting Room</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Resolved Room</label>
+              <input type="text" class="form-input" id="book-resolved-room" readonly style="font-weight: 700; background: var(--slate-100); color: var(--slate-800);">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Date</label>
+                <input type="date" class="form-input" id="book-date" value="2026-06-23">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Duration</label>
+                <select class="form-input" id="book-duration">
+                  <option value="30 minutes">30 minutes</option>
+                  <option value="1 hour" selected>1 hour</option>
+                  <option value="1.5 hours">1.5 hours</option>
+                  <option value="2 hours">2 hours</option>
+                  <option value="Half day">Half day</option>
+                  <option value="Full day">Full day</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Start Time</label>
+                <select class="form-input" id="book-start">
+                  <option value="09:00">09:00 AM</option>
+                  <option value="09:30">09:30 AM</option>
+                  <option value="10:00">10:00 AM</option>
+                  <option value="10:30">10:30 AM</option>
+                  <option value="11:00" selected>11:00 AM</option>
+                  <option value="11:30">11:30 AM</option>
+                  <option value="12:00">12:00 PM</option>
+                  <option value="12:30">12:30 PM</option>
+                  <option value="13:00">01:00 PM</option>
+                  <option value="13:30">01:30 PM</option>
+                  <option value="14:00">02:00 PM</option>
+                  <option value="14:30">02:30 PM</option>
+                  <option value="15:00">03:00 PM</option>
+                  <option value="15:30">03:30 PM</option>
+                  <option value="16:00">04:00 PM</option>
+                  <option value="16:30">04:30 PM</option>
+                  <option value="17:00">05:00 PM</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Attendees</label>
+                <input type="number" class="form-input" value="5" min="1" max="100" id="book-attendees">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Purpose / Agenda</label>
+              <textarea class="form-input" rows="3" id="book-purpose" placeholder="Q2 Sync, Client Demo, Strategy meeting..."></textarea>
+            </div>
+
+            <div class="approval-card">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/><path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <div>Your booking request will require manager approval before room unlock rights are uploaded to your RFID tag.</div>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-primary btn-large" onclick="submitBooking()">
+                <svg viewBox="0 0 24 24"><path d="M2 12h20M12 2v20M2 12l5-5M2 12l5 5" stroke="white" stroke-width="2" fill="none"/></svg>
+                Send Request
+              </button>
+              <button class="btn btn-outline btn-large" onclick="showPage('dashboard')">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIMETABLE PAGE -->
+      <div id="page-timetable" class="page">
+        <div class="timetable-wrap glass">
+          <div class="timetable-header">
+            <div class="timetable-title">Weekly Room Schedule</div>
+            <div class="week-nav">
+              <button class="btn-icon" onclick="changeWeek(-1)"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
+              <span class="week-label" id="week-label">23–27 Jun 2026</span>
+              <button class="btn-icon" onclick="changeWeek(1)"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
+            </div>
+            <select class="form-input" style="width:180px; margin-left:12px;" id="tt-room-filter" onchange="renderWeekTimetable()">
+              <option value="all">All Rooms</option>
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+          <div class="timetable-grid">
+            <table class="timetable" id="week-timetable"></table>
+          </div>
+          <div class="timetable-legend">
+            <div class="legend-item"><div class="legend-dot legend-available"></div>Available</div>
+            <div class="legend-item"><div class="legend-dot legend-booked"></div>Booked (approved)</div>
+            <div class="legend-item"><div class="legend-dot legend-pending"></div>Pending approval</div>
+            <div class="legend-item"><div class="legend-dot legend-mine"></div>Your booking</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MY BOOKINGS -->
+      <div id="page-mybookings" class="page">
+        <div class="section-header">
+          <div class="section-title">My Bookings</div>
+          <button class="btn btn-primary btn-sm" onclick="openBookModal()">+ New Booking</button>
+        </div>
+        <div class="table-card glass">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Room</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Purpose</th>
+                <th>Status</th>
+                <th>RFID Check-in</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="my-bookings-list"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RFID LOG / SIMULATOR PAGE -->
+      <div id="page-rfid" class="page">
+        <div class="rfid-simulation-container">
+          <!-- RFID Card Reader Simulator Widget -->
+          <div class="rfid-reader-widget glass">
+            <div class="widget-header">
+              <div class="sensor-light" id="rfid-sensor-light"></div>
+              <h3>RFID Scanner Simulator</h3>
+            </div>
+            <p class="widget-desc">Simulate swiping employee security badges at the meeting room door controllers.</p>
+            
+            <div class="form-group">
+              <label class="form-label">Target Room Door</label>
+              <select class="form-input" id="rfid-sim-room-select">
+                <!-- Dynamically populated with rooms -->
+              </select>
+            </div>
+
+            <label class="form-label">Available Employee Badge Cards</label>
+            <div class="rfid-cards-grid" id="rfid-sim-cards">
+              <!-- Cards dynamically rendered here -->
+            </div>
+          </div>
+
+          <!-- RFID Log list -->
+          <div class="rfid-log-panel glass">
+            <div class="panel-header">
+              <h3>Live Door Scan Event Log</h3>
+              <span class="badge" id="log-count">0 logs today</span>
+            </div>
+            <div class="rfid-log" id="rfid-log-list">
+              <!-- Logs populated here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MANAGER VIEW -->
+      <div id="page-manager" class="page">
+        <!-- Notice if not manager -->
+        <div id="employee-notice" class="alert alert-warning" style="display:none;">
+          🔒 <strong>Access Denied:</strong> Switch your role to <strong>Manager</strong> or <strong>Admin</strong> in the sidebar.
+        </div>
+
+        <div class="manager-layout" id="manager-container">
+          <div class="approval-queue glass">
+            <div class="queue-header">
+              <h4>Pending Approval Requests</h4>
+              <span class="badge badge-pending" id="queue-badge">0 pending</span>
+            </div>
+            <div class="queue-items" id="approval-list">
+              <!-- Items loaded dynamically -->
+            </div>
+          </div>
+
+          <div class="section-header" style="margin-top:24px;">
+            <div class="section-title">All Reservations (Manager Console)</div>
+            <select class="form-input" style="width:160px;" id="mgr-filter" onchange="renderManagerTable()">
+              <option value="All">All Statuses</option>
+              <option value="Pending">Pending Only</option>
+              <option value="Approved">Approved Only</option>
+              <option value="Rejected">Rejected Only</option>
+            </select>
+          </div>
+          <div class="table-card glass">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Room</th>
+                  <th>Date & Time</th>
+                  <th>Purpose</th>
+                  <th>Status</th>
+                  <th>RFID Scan</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="mgr-bookings-list"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN CONSOLE PAGE -->
+      <div id="page-admin" class="page">
+        <!-- Access warning if not admin -->
+        <div id="admin-notice" class="alert alert-danger" style="display:none;">
+          🚫 <strong>Access Denied:</strong> This console is strictly reserved for System Administrators. Switch role to Admin in the sidebar.
+        </div>
+
+        <div id="admin-container" class="admin-dashboard-layout">
+          <!-- Admin Tabs bar -->
+          <div class="admin-tabs glass">
+            <button class="admin-tab active" onclick="switchAdminTab('rooms')">Rooms Configuration</button>
+            <button class="admin-tab" onclick="switchAdminTab('employees')">Employee Directory</button>
+            <button class="admin-tab" onclick="switchAdminTab('bookings')">Master Booking Log</button>
+            <button class="admin-tab" onclick="switchAdminTab('settings')">Security & Settings</button>
+            <button class="admin-tab" onclick="switchAdminTab('analytics')">System Analytics</button>
+          </div>
+
+          <!-- TAB CONTENT: ROOMS -->
+          <div id="admin-tab-rooms" class="admin-tab-content active">
+            <div class="tab-header">
+              <h3>Manage Meeting Rooms</h3>
+              <button class="btn btn-primary btn-sm" onclick="openAddRoomModal()">+ Add New Room</button>
+            </div>
+            <div class="table-card glass">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Room ID</th>
+                    <th>Name</th>
+                    <th>Capacity</th>
+                    <th>Lock Override Status</th>
+                    <th>Physical Door Override Actions</th>
+                    <th>Edit/Delete</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-rooms-list"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: EMPLOYEES -->
+          <div id="admin-tab-employees" class="admin-tab-content">
+            <div class="tab-header">
+              <h3>Employee Security badge Directory</h3>
+              <button class="btn btn-primary btn-sm" onclick="openAddEmpModal()">+ Add Employee Badge</button>
+            </div>
+            <div class="table-card glass">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>RFID Badge UID</th>
+                    <th>Role Clearance</th>
+                    <th>Edit/Delete</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-employees-list"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: BOOKINGS -->
+          <div id="admin-tab-bookings" class="admin-tab-content">
+            <div class="tab-header">
+              <h3>Master Booking Manager</h3>
+              <button class="btn btn-primary btn-sm" onclick="openAdminAddBookingModal()">+ Force Admin Booking</button>
+            </div>
+            <div class="table-card glass">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Room</th>
+                    <th>Date & Time</th>
+                    <th>Purpose</th>
+                    <th>Status</th>
+                    <th>Check-in/Out</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-bookings-list"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: SETTINGS & LOGS -->
+          <div id="admin-tab-settings" class="admin-tab-content">
+            <div class="admin-settings-grid">
+              
+              <!-- Left Side: System settings -->
+              <div class="settings-card glass">
+                <h3>Global Security Overrides</h3>
+                
+                <div class="settings-group">
+                  <label class="form-label">System Global Lockdown</label>
+                  <p class="settings-desc">Immediately lock all rooms and block all RFID scanner signals globally.</p>
+                  <div class="lockdown-toggle-container">
+                    <button class="btn btn-danger" id="global-lockdown-btn" onclick="toggleGlobalLockdown()">
+                      Enable System Lockdown
+                    </button>
+                    <span class="lockdown-status-badge" id="lockdown-status-indicator">OFF - NORMAL</span>
+                  </div>
+                </div>
+
+                <div class="settings-group" style="margin-top: 24px;">
+                  <label class="form-label">RFID Scan Grace Period (Minutes)</label>
+                  <p class="settings-desc">Time allocated for employees to swipe badge before reservation auto-expires.</p>
+                  <div class="flex-row">
+                    <input type="number" class="form-input" id="sys-grace-period" value="15" min="1" max="120" style="width: 100px;">
+                    <button class="btn btn-outline" onclick="saveSystemSettings()">Save Parameters</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Side: System logs -->
+              <div class="audit-logs-card glass">
+                <h3>Admin Security Audit Logs</h3>
+                <div class="audit-logs-list" id="admin-audit-logs-list">
+                  <!-- Audit logs populate here -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: ANALYTICS -->
+          <div id="admin-tab-analytics" class="admin-tab-content">
+            <div class="analytics-row">
+              <div class="analytic-widget glass">
+                <h4>Room Utilization Statistics</h4>
+                <div class="chart-mockup">
+                  <div class="bar-chart-container" id="analytics-utilization-bars">
+                    <!-- Dynamic rendering -->
+                  </div>
+                </div>
+              </div>
+              <div class="analytic-widget glass">
+                <h4>Card Swipe Analytics (Today)</h4>
+                <div class="stat-summary-large">
+                  <div class="metric-block">
+                    <span class="metric-val" id="metric-total-scans">0</span>
+                    <span class="metric-lbl">Total Scans</span>
+                  </div>
+                  <div class="metric-block text-success">
+                    <span class="metric-val" id="metric-access-granted">0</span>
+                    <span class="metric-lbl">Granted Access</span>
+                  </div>
+                  <div class="metric-block text-danger">
+                    <span class="metric-val" id="metric-access-denied">0</span>
+                    <span class="metric-lbl">Access Denied</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div>
+
+<!-- ======================== MODALS ======================== -->
+
+<!-- BOOKING / QUICK BOOKING MODAL -->
+<div class="modal-backdrop" id="book-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor" stroke-width="2" fill="none"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2"/></svg></div>
+      <div>
+        <div class="modal-title">Quick Booking Reservation</div>
+        <div class="modal-sub">Requests are routed for manager clearance.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.5" fill="none"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Select Floor</label>
+          <select class="form-input" id="m-floor" onchange="updateQuickBookResolution()">
+            <option value="1">Floor 1</option>
+            <option value="2">Floor 2</option>
+            <option value="3">Floor 3</option>
+            <option value="4">Floor 4</option>
+            <option value="5">Floor 5</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Room Type</label>
+          <select class="form-input" id="m-type" onchange="updateQuickBookResolution()">
+            <option value="Conference Room">Conference Room</option>
+            <option value="Meeting Room">Meeting Room</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Resolved Room</label>
+        <input type="text" class="form-input" id="m-resolved-room" readonly style="font-weight:700; background:var(--slate-100);">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" id="m-date" value="2026-06-23">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Start Time</label>
+          <select class="form-input" id="m-time">
+            <option value="09:00">09:00 AM</option>
+            <option value="10:00">10:00 AM</option>
+            <option value="11:00" selected>11:00 AM</option>
+            <option value="12:00">12:00 PM</option>
+            <option value="13:00">01:00 PM</option>
+            <option value="14:00">02:00 PM</option>
+            <option value="15:00">03:00 PM</option>
+            <option value="16:00">04:00 PM</option>
+            <option value="17:00">05:00 PM</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Duration</label>
+        <select class="form-input" id="m-duration">
+          <option value="30 minutes">30 min</option>
+          <option value="1 hour" selected>1 hour</option>
+          <option value="1.5 hours">1.5 hours</option>
+          <option value="2 hours">2 hours</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Purpose / Agenda</label>
+        <input type="text" class="form-input" id="m-purpose" placeholder="Team Sync, Sync-up, Demo...">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitQuickBooking()">Send Request</button>
+    </div>
+  </div>
+</div>
+
+<!-- ROOM EDITOR MODAL -->
+<div class="modal-backdrop" id="room-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/><rect x="9" y="9" width="6" height="6" stroke="currentColor" stroke-width="2"/></svg></div>
+      <div>
+        <div class="modal-title" id="room-modal-title">Create New Meeting Room</div>
+        <div class="modal-sub">Specify name, capacity and lock state controls.</div>
+      </div>
+      <button class="modal-close" onclick="closeRoomModal()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.5" fill="none"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="room-modal-id">
+      <div class="form-group">
+        <label class="form-label">Room Name</label>
+        <input type="text" class="form-input" id="room-modal-name" placeholder="Boardroom E, Suite 201...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Capacity (People)</label>
+        <input type="number" class="form-input" id="room-modal-capacity" value="10" min="1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Initial Lock State Override</label>
+        <select class="form-input" id="room-modal-lock">
+          <option value="Normal">Normal (Requires Booking)</option>
+          <option value="Locked">Administratively Locked (No Access)</option>
+          <option value="Force Unlocked">Force Unlocked (Open Gate)</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeRoomModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveRoomSubmit()">Save Room</button>
+    </div>
+  </div>
+</div>
+
+<!-- EMPLOYEE EDITOR MODAL -->
+<div class="modal-backdrop" id="emp-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/></svg></div>
+      <div>
+        <div class="modal-title" id="emp-modal-title">Add Employee Badge</div>
+        <div class="modal-sub">Create profiles and assign RFID badge credentials.</div>
+      </div>
+      <button class="modal-close" onclick="closeEmpModal()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.5" fill="none"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="emp-modal-id">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-input" id="emp-modal-name" placeholder="John Doe">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Department</label>
+        <input type="text" class="form-input" id="emp-modal-dept" placeholder="Engineering, Design...">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">RFID Tag Badge UID</label>
+          <input type="text" class="form-input" id="emp-modal-tag" placeholder="RF-XXXX">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role Clearance</label>
+          <select class="form-input" id="emp-modal-role">
+            <option value="employee">Employee</option>
+            <option value="manager">Manager</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeEmpModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEmpSubmit()">Save Employee</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN DIRECT BOOKING MODAL -->
+<div class="modal-backdrop" id="admin-booking-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor" stroke-width="2" fill="none"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2"/></svg></div>
+      <div>
+        <div class="modal-title" id="admin-booking-title">Create Administrative Reservation</div>
+        <div class="modal-sub">Create, reschedule, or force confirm bookings directly.</div>
+      </div>
+      <button class="modal-close" onclick="closeAdminBookingModal()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.5" fill="none"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="admin-booking-id">
+      
+      <div class="form-group">
+        <label class="form-label">Target Employee User</label>
+        <select class="form-input" id="admin-booking-user">
+          <!-- Dynamically populated with employees -->
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Select Floor</label>
+          <select class="form-input" id="admin-booking-floor" onchange="updateAdminBookResolution()">
+            <option value="1">Floor 1</option>
+            <option value="2">Floor 2</option>
+            <option value="3">Floor 3</option>
+            <option value="4">Floor 4</option>
+            <option value="5">Floor 5</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Room Type</label>
+          <select class="form-input" id="admin-booking-type" onchange="updateAdminBookResolution()">
+            <option value="Conference Room">Conference Room</option>
+            <option value="Meeting Room">Meeting Room</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Resolved Room</label>
+        <input type="text" class="form-input" id="admin-booking-resolved-room" readonly style="font-weight:700; background:var(--slate-100);">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" id="admin-booking-date" value="2026-06-23">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Start Time</label>
+          <select class="form-input" id="admin-booking-start">
+            <option value="09:00">09:00 AM</option>
+            <option value="10:00">10:00 AM</option>
+            <option value="11:00" selected>11:00 AM</option>
+            <option value="12:00">12:00 PM</option>
+            <option value="13:00">01:00 PM</option>
+            <option value="14:00">02:00 PM</option>
+            <option value="15:00">03:00 PM</option>
+            <option value="16:00">04:00 PM</option>
+            <option value="17:00">05:00 PM</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Duration</label>
+          <select class="form-input" id="admin-booking-duration">
+            <option value="30 minutes">30 minutes</option>
+            <option value="1 hour" selected>1 hour</option>
+            <option value="1.5 hours">1.5 hours</option>
+            <option value="2 hours">2 hours</option>
+            <option value="Half day">Half day</option>
+            <option value="Full day">Full day</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Clearance Status</label>
+          <select class="form-input" id="admin-booking-status">
+            <option value="pending">Pending Approval</option>
+            <option value="approved">Approved & Confirmed</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Purpose / Agenda</label>
+        <input type="text" class="form-input" id="admin-booking-purpose" placeholder="Team Sync, Board Meeting, Client Demo...">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeAdminBookingModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveAdminBookingSubmit()">Save Booking</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
