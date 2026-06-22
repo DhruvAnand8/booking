@@ -1759,7 +1759,7 @@ textarea.form-input {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: auto; /* Push branding footer to bottom of flex column container */
+  margin-bottom: auto; /* Pushes profile switcher to the bottom of the sidebar */
 }
 
 .footer-logo-wrap {
