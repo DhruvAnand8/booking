@@ -570,14 +570,23 @@
                     </select>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Theme Color</label>
-                    <select class="form-input" id="sys-theme">
-                      <option value="indigo">BookMyRoom Indigo</option>
-                      <option value="emerald">Deep Emerald</option>
-                      <option value="orange">Sunset Orange</option>
-                      <option value="crimson">Crimson Velvet</option>
-                      <option value="dark">Slate Grey</option>
-                    </select>
+                    <label class="form-label">Theme Color Accent</label>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <select class="form-input" id="sys-theme" style="width: 140px; flex-shrink: 0;" onchange="selectThemeDropdown(this.value)">
+                        <option value="indigo">Indigo Blue</option>
+                        <option value="emerald">Emerald Green</option>
+                        <option value="orange">Sunset Orange</option>
+                        <option value="crimson">Crimson Red</option>
+                        <option value="dark">Slate Dark</option>
+                      </select>
+                      <div class="color-palette-picker" id="sys-color-palette">
+                        <div class="color-circle" data-theme="indigo" style="background: #4F46E5;" onclick="selectThemeCircle('indigo')"></div>
+                        <div class="color-circle" data-theme="emerald" style="background: #10B981;" onclick="selectThemeCircle('emerald')"></div>
+                        <div class="color-circle" data-theme="orange" style="background: #F59E0B;" onclick="selectThemeCircle('orange')"></div>
+                        <div class="color-circle" data-theme="crimson" style="background: #E11D48;" onclick="selectThemeCircle('crimson')"></div>
+                        <div class="color-circle" data-theme="dark" style="background: #334155;" onclick="selectThemeCircle('dark')"></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 

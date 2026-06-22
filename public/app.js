@@ -852,6 +852,7 @@ function renderAdminSettings() {
   }
   if (state.systemSettings.theme !== undefined) {
     document.getElementById('sys-theme').value = state.systemSettings.theme;
+    highlightActiveThemeCircle(state.systemSettings.theme);
   }
   
   // Render logs
@@ -1310,8 +1311,10 @@ function applyBranding(settings) {
   const logoIconEl = document.querySelector('.logo-icon');
   if (logoIconEl) {
     if (settings.logoUrl && settings.logoUrl.trim() !== '') {
-      logoIconEl.innerHTML = `<img src="${settings.logoUrl.trim()}" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;">`;
+      logoIconEl.classList.add('has-image');
+      logoIconEl.innerHTML = `<img src="${settings.logoUrl.trim()}" style="width:100%; height:100%; object-fit:contain; border-radius:inherit;">`;
     } else {
+      logoIconEl.classList.remove('has-image');
       // Restore default vector icon
       logoIconEl.innerHTML = `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" stroke="white" stroke-width="2" fill="none"/><path d="M9 9h6M9 13h6M9 17h4" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>`;
     }
@@ -1331,6 +1334,29 @@ function applyBranding(settings) {
   document.documentElement.style.setProperty('--primary-dark', activeTheme.dark);
   document.documentElement.style.setProperty('--primary-light', activeTheme.light);
   document.documentElement.style.setProperty('--primary-glow', activeTheme.glow);
+}
+
+function highlightActiveThemeCircle(themeName) {
+  const circles = document.querySelectorAll('#sys-color-palette .color-circle');
+  circles.forEach(circle => {
+    if (circle.getAttribute('data-theme') === themeName) {
+      circle.classList.add('active');
+    } else {
+      circle.classList.remove('active');
+    }
+  });
+}
+
+function selectThemeCircle(themeName) {
+  const selectEl = document.getElementById('sys-theme');
+  if (selectEl) {
+    selectEl.value = themeName;
+  }
+  highlightActiveThemeCircle(themeName);
+}
+
+function selectThemeDropdown(themeName) {
+  highlightActiveThemeCircle(themeName);
 }
 
 async function saveBrandingSettings() {

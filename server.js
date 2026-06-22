@@ -394,6 +394,7 @@ app.post('/api/rfid/tap', (req, res) => {
 
 // 6. Settings endpoint
 app.post('/api/system/settings', (req, res) => {
+  console.log('API settings request body:', req.body);
   const db = readDb();
   const { globalLockdown, gracePeriod, companyName, logoUrl, fontFamily, theme, actor } = req.body;
   

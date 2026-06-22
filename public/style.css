@@ -1717,3 +1717,36 @@ textarea.form-input {
 .room-lock-badge.Normal { background: var(--success-light); color: var(--success); }
 .room-lock-badge.Locked { background: var(--danger-light); color: var(--danger); }
 .room-lock-badge.ForceUnlocked { background: var(--primary-light); color: var(--primary); }
+
+/* COLOR PALETTE PICKER FOR SYSTEM SETTINGS */
+.color-palette-picker {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.color-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.color-circle:hover {
+  transform: scale(1.15);
+}
+
+.color-circle.active {
+  border-color: var(--slate-800);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  transform: scale(1.1);
+}
+
+/* CUSTOM LOGO CLASS */
+.logo-icon.has-image {
+  background: transparent;
+  box-shadow: none;
+}

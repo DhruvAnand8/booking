@@ -1,50 +1,337 @@
 {
   "rooms": [
-    { "id": "R001", "name": "Floor 1 Conference Room", "capacity": 12, "lockStatus": "Normal" },
-    { "id": "R002", "name": "Floor 1 Meeting Room 1", "capacity": 6, "lockStatus": "Normal" },
-    { "id": "R003", "name": "Floor 1 Meeting Room 2", "capacity": 6, "lockStatus": "Normal" },
-    { "id": "R004", "name": "Floor 1 Meeting Room 3", "capacity": 8, "lockStatus": "Normal" },
-    { "id": "R005", "name": "Floor 2 Conference Room", "capacity": 12, "lockStatus": "Normal" },
-    { "id": "R006", "name": "Floor 2 Meeting Room 1", "capacity": 6, "lockStatus": "Normal" },
-    { "id": "R007", "name": "Floor 2 Meeting Room 2", "capacity": 6, "lockStatus": "Normal" },
-    { "id": "R008", "name": "Floor 2 Meeting Room 3", "capacity": 8, "lockStatus": "Normal" },
-    { "id": "R009", "name": "Floor 3 Conference Room", "capacity": 12, "lockStatus": "Normal" },
-    { "id": "R010", "name": "Floor 3 Meeting Room 1", "capacity": 6, "lockStatus": "Normal" },
-    { "id": "R011", "name": "Floor 3 Meeting Room 2", "capacity": 6, "lockStatus": "Normal" },
-    { "id": "R012", "name": "Floor 3 Meeting Room 3", "capacity": 8, "lockStatus": "Normal" },
-    { "id": "R013", "name": "Floor 4 Conference Room", "capacity": 12, "lockStatus": "Normal" },
-    { "id": "R014", "name": "Floor 4 Meeting Room 1", "capacity": 6, "lockStatus": "Normal" },
-    { "id": "R015", "name": "Floor 4 Meeting Room 2", "capacity": 6, "lockStatus": "Normal" },
-    { "id": "R016", "name": "Floor 4 Meeting Room 3", "capacity": 8, "lockStatus": "Normal" },
-    { "id": "R017", "name": "Floor 5 Conference Room", "capacity": 12, "lockStatus": "Normal" },
-    { "id": "R018", "name": "Floor 5 Meeting Room 1", "capacity": 6, "lockStatus": "Normal" },
-    { "id": "R019", "name": "Floor 5 Meeting Room 2", "capacity": 6, "lockStatus": "Normal" },
-    { "id": "R020", "name": "Floor 5 Meeting Room 3", "capacity": 8, "lockStatus": "Normal" }
+    {
+      "id": "R001",
+      "name": "Floor 1 Conference Room",
+      "capacity": 12,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R002",
+      "name": "Floor 1 Meeting Room 1",
+      "capacity": 6,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R003",
+      "name": "Floor 1 Meeting Room 2",
+      "capacity": 6,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R004",
+      "name": "Floor 1 Meeting Room 3",
+      "capacity": 8,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R005",
+      "name": "Floor 2 Conference Room",
+      "capacity": 12,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R006",
+      "name": "Floor 2 Meeting Room 1",
+      "capacity": 6,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R007",
+      "name": "Floor 2 Meeting Room 2",
+      "capacity": 6,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R008",
+      "name": "Floor 2 Meeting Room 3",
+      "capacity": 8,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R009",
+      "name": "Floor 3 Conference Room",
+      "capacity": 12,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R010",
+      "name": "Floor 3 Meeting Room 1",
+      "capacity": 6,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R011",
+      "name": "Floor 3 Meeting Room 2",
+      "capacity": 6,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R012",
+      "name": "Floor 3 Meeting Room 3",
+      "capacity": 8,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R013",
+      "name": "Floor 4 Conference Room",
+      "capacity": 12,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R014",
+      "name": "Floor 4 Meeting Room 1",
+      "capacity": 6,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R015",
+      "name": "Floor 4 Meeting Room 2",
+      "capacity": 6,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R016",
+      "name": "Floor 4 Meeting Room 3",
+      "capacity": 8,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R017",
+      "name": "Floor 5 Conference Room",
+      "capacity": 12,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R018",
+      "name": "Floor 5 Meeting Room 1",
+      "capacity": 6,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R019",
+      "name": "Floor 5 Meeting Room 2",
+      "capacity": 6,
+      "lockStatus": "Normal"
+    },
+    {
+      "id": "R020",
+      "name": "Floor 5 Meeting Room 3",
+      "capacity": 8,
+      "lockStatus": "Normal"
+    }
   ],
   "employees": [
-    { "id": "E001", "name": "Arjun Kapoor", "tag": "RF-4A2B", "dept": "Engineering", "initials": "AK", "color": "#EDE9FE", "textColor": "#534AB7", "role": "employee" },
-    { "id": "E002", "name": "Priya Mehta", "tag": "RF-9C3D", "dept": "Management", "initials": "PM", "color": "#E1F5EE", "textColor": "#0F6E56", "role": "manager" },
-    { "id": "E003", "name": "Rahul Sharma", "tag": "RF-7E5F", "dept": "Design", "initials": "RS", "color": "#FAECE7", "textColor": "#993C1D", "role": "employee" },
-    { "id": "E004", "name": "Neha Gupta", "tag": "RF-2G8H", "dept": "Marketing", "initials": "NG", "color": "#FAEEDA", "textColor": "#854F0B", "role": "employee" },
-    { "id": "E005", "name": "Vikram Singh", "tag": "RF-6I1J", "dept": "IT & Security", "initials": "VS", "color": "#FBEAF0", "textColor": "#993556", "role": "admin" }
+    {
+      "id": "E001",
+      "name": "Arjun Kapoor",
+      "tag": "RF-4A2B",
+      "dept": "Engineering",
+      "initials": "AK",
+      "color": "#EDE9FE",
+      "textColor": "#534AB7",
+      "role": "employee"
+    },
+    {
+      "id": "E002",
+      "name": "Priya Mehta",
+      "tag": "RF-9C3D",
+      "dept": "Management",
+      "initials": "PM",
+      "color": "#E1F5EE",
+      "textColor": "#0F6E56",
+      "role": "manager"
+    },
+    {
+      "id": "E003",
+      "name": "Rahul Sharma",
+      "tag": "RF-7E5F",
+      "dept": "Design",
+      "initials": "RS",
+      "color": "#FAECE7",
+      "textColor": "#993C1D",
+      "role": "employee"
+    },
+    {
+      "id": "E004",
+      "name": "Neha Gupta",
+      "tag": "RF-2G8H",
+      "dept": "Marketing",
+      "initials": "NG",
+      "color": "#FAEEDA",
+      "textColor": "#854F0B",
+      "role": "employee"
+    },
+    {
+      "id": "E005",
+      "name": "Vikram Singh",
+      "tag": "RF-6I1J",
+      "dept": "IT & Security",
+      "initials": "VS",
+      "color": "#FBEAF0",
+      "textColor": "#993556",
+      "role": "admin"
+    }
   ],
   "bookings": [
-    { "id": 1, "empId": "E003", "room": "Floor 1 Conference Room", "date": "2026-06-23", "start": "09:00", "duration": "1 hour", "purpose": "Client presentation", "status": "approved", "checkin": null, "checkout": null },
-    { "id": 2, "empId": "E004", "room": "Floor 1 Meeting Room 1", "date": "2026-06-23", "start": "10:00", "duration": "1 hour", "purpose": "Marketing strategy sync", "status": "approved", "checkin": "10:03", "checkout": "11:07" },
-    { "id": 3, "empId": "E001", "room": "Floor 2 Conference Room", "date": "2026-06-23", "start": "11:00", "duration": "1 hour", "purpose": "Sprint planning", "status": "approved", "checkin": "11:02", "checkout": null },
-    { "id": 4, "empId": "E005", "room": "Floor 2 Meeting Room 1", "date": "2026-06-23", "start": "14:00", "duration": "2 hours", "purpose": "Sales training", "status": "pending", "checkin": null, "checkout": null },
-    { "id": 5, "empId": "E001", "room": "Floor 1 Conference Room", "date": "2026-06-24", "start": "10:00", "duration": "1.5 hours", "purpose": "Architecture review", "status": "pending", "checkin": null, "checkout": null },
-    { "id": 6, "empId": "E003", "room": "Floor 1 Meeting Room 1", "date": "2026-06-24", "start": "14:00", "duration": "1 hour", "purpose": "Design critique", "status": "approved", "checkin": null, "checkout": null },
-    { "id": 7, "empId": "E004", "room": "Floor 2 Conference Room", "date": "2026-06-25", "start": "09:00", "duration": "1 hour", "purpose": "Campaign kickoff", "status": "pending", "checkin": null, "checkout": null },
-    { "id": 8, "empId": "E005", "room": "Floor 1 Conference Room", "date": "2026-06-25", "start": "15:00", "duration": "1 hour", "purpose": "Investor call", "status": "approved", "checkin": null, "checkout": null }
+    {
+      "id": 1,
+      "empId": "E003",
+      "room": "Floor 1 Conference Room",
+      "date": "2026-06-23",
+      "start": "09:00",
+      "duration": "1 hour",
+      "purpose": "Client presentation",
+      "status": "approved",
+      "checkin": null,
+      "checkout": null
+    },
+    {
+      "id": 2,
+      "empId": "E004",
+      "room": "Floor 1 Meeting Room 1",
+      "date": "2026-06-23",
+      "start": "10:00",
+      "duration": "1 hour",
+      "purpose": "Marketing strategy sync",
+      "status": "approved",
+      "checkin": "10:03",
+      "checkout": "11:07"
+    },
+    {
+      "id": 3,
+      "empId": "E001",
+      "room": "Floor 2 Conference Room",
+      "date": "2026-06-23",
+      "start": "11:00",
+      "duration": "1 hour",
+      "purpose": "Sprint planning",
+      "status": "approved",
+      "checkin": "11:02",
+      "checkout": null
+    },
+    {
+      "id": 4,
+      "empId": "E005",
+      "room": "Floor 2 Meeting Room 1",
+      "date": "2026-06-23",
+      "start": "14:00",
+      "duration": "2 hours",
+      "purpose": "Sales training",
+      "status": "pending",
+      "checkin": null,
+      "checkout": null
+    },
+    {
+      "id": 5,
+      "empId": "E001",
+      "room": "Floor 1 Conference Room",
+      "date": "2026-06-24",
+      "start": "10:00",
+      "duration": "1.5 hours",
+      "purpose": "Architecture review",
+      "status": "pending",
+      "checkin": null,
+      "checkout": null
+    },
+    {
+      "id": 6,
+      "empId": "E003",
+      "room": "Floor 1 Meeting Room 1",
+      "date": "2026-06-24",
+      "start": "14:00",
+      "duration": "1 hour",
+      "purpose": "Design critique",
+      "status": "approved",
+      "checkin": null,
+      "checkout": null
+    },
+    {
+      "id": 7,
+      "empId": "E004",
+      "room": "Floor 2 Conference Room",
+      "date": "2026-06-25",
+      "start": "09:00",
+      "duration": "1 hour",
+      "purpose": "Campaign kickoff",
+      "status": "pending",
+      "checkin": null,
+      "checkout": null
+    },
+    {
+      "id": 8,
+      "empId": "E005",
+      "room": "Floor 1 Conference Room",
+      "date": "2026-06-25",
+      "start": "15:00",
+      "duration": "1 hour",
+      "purpose": "Investor call",
+      "status": "approved",
+      "checkin": null,
+      "checkout": null
+    }
   ],
   "rfidLog": [
-    { "id": 1, "tag": "RF-9C3D", "name": "Priya Mehta", "room": "Floor 1 Conference Room", "event": "check-in", "time": "09:01", "date": "2026-06-23", "duration": null },
-    { "id": 2, "tag": "RF-9C3D", "name": "Priya Mehta", "room": "Floor 1 Conference Room", "event": "check-out", "time": "09:58", "date": "2026-06-23", "duration": "57 min" },
-    { "id": 3, "tag": "RF-7E5F", "name": "Rahul Sharma", "room": "Floor 1 Conference Room", "event": "check-in", "time": "09:00", "date": "2026-06-23", "duration": null },
-    { "id": 4, "tag": "RF-2G8H", "name": "Neha Gupta", "room": "Floor 1 Meeting Room 1", "event": "check-in", "time": "10:03", "date": "2026-06-23", "duration": null },
-    { "id": 5, "tag": "RF-2G8H", "name": "Neha Gupta", "room": "Floor 1 Meeting Room 1", "event": "check-out", "time": "11:07", "date": "2026-06-23", "duration": "1h 04min" },
-    { "id": 6, "tag": "RF-4A2B", "name": "Arjun Kapoor", "room": "Floor 2 Conference Room", "event": "check-in", "time": "11:02", "date": "2026-06-23", "duration": null }
+    {
+      "id": 1,
+      "tag": "RF-9C3D",
+      "name": "Priya Mehta",
+      "room": "Floor 1 Conference Room",
+      "event": "check-in",
+      "time": "09:01",
+      "date": "2026-06-23",
+      "duration": null
+    },
+    {
+      "id": 2,
+      "tag": "RF-9C3D",
+      "name": "Priya Mehta",
+      "room": "Floor 1 Conference Room",
+      "event": "check-out",
+      "time": "09:58",
+      "date": "2026-06-23",
+      "duration": "57 min"
+    },
+    {
+      "id": 3,
+      "tag": "RF-7E5F",
+      "name": "Rahul Sharma",
+      "room": "Floor 1 Conference Room",
+      "event": "check-in",
+      "time": "09:00",
+      "date": "2026-06-23",
+      "duration": null
+    },
+    {
+      "id": 4,
+      "tag": "RF-2G8H",
+      "name": "Neha Gupta",
+      "room": "Floor 1 Meeting Room 1",
+      "event": "check-in",
+      "time": "10:03",
+      "date": "2026-06-23",
+      "duration": null
+    },
+    {
+      "id": 5,
+      "tag": "RF-2G8H",
+      "name": "Neha Gupta",
+      "room": "Floor 1 Meeting Room 1",
+      "event": "check-out",
+      "time": "11:07",
+      "date": "2026-06-23",
+      "duration": "1h 04min"
+    },
+    {
+      "id": 6,
+      "tag": "RF-4A2B",
+      "name": "Arjun Kapoor",
+      "room": "Floor 2 Conference Room",
+      "event": "check-in",
+      "time": "11:02",
+      "date": "2026-06-23",
+      "duration": null
+    }
   ],
   "rfidState": {},
   "systemSettings": {
@@ -56,6 +343,68 @@
     "theme": "indigo"
   },
   "auditLogs": [
-    { "id": 1, "timestamp": "2026-06-22T14:00:00.000Z", "action": "SYSTEM_INITIALIZE", "user": "System", "details": "Database initialized with seed data." }
+    {
+      "id": 9,
+      "timestamp": "2026-06-22T11:19:09.303Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: indigo"
+    },
+    {
+      "id": 8,
+      "timestamp": "2026-06-22T11:18:55.681Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: crimson"
+    },
+    {
+      "id": 7,
+      "timestamp": "2026-06-22T11:18:52.565Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: crimson"
+    },
+    {
+      "id": 6,
+      "timestamp": "2026-06-22T11:18:50.046Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: crimson"
+    },
+    {
+      "id": 5,
+      "timestamp": "2026-06-22T11:18:46.845Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: orange"
+    },
+    {
+      "id": 4,
+      "timestamp": "2026-06-22T11:18:41.072Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: orange"
+    },
+    {
+      "id": 3,
+      "timestamp": "2026-06-22T11:18:00.873Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: emerald"
+    },
+    {
+      "id": 2,
+      "timestamp": "2026-06-22T11:15:48.821Z",
+      "action": "SETTINGS_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System grace period set to 15 minutes"
+    },
+    {
+      "id": 1,
+      "timestamp": "2026-06-22T14:00:00.000Z",
+      "action": "SYSTEM_INITIALIZE",
+      "user": "System",
+      "details": "Database initialized with seed data."
+    }
   ]
 }
