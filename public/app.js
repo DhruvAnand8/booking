@@ -1360,6 +1360,7 @@ async function saveBrandingSettings() {
   } catch (err) {
     toast('Network communication error.', 'danger');
   }
+}
 
 // ======================== INITIALIZE ========================
 
