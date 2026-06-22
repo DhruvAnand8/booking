@@ -49,7 +49,11 @@
   "rfidState": {},
   "systemSettings": {
     "globalLockdown": false,
-    "gracePeriod": 15
+    "gracePeriod": 15,
+    "companyName": "BookMyRoom",
+    "logoUrl": "",
+    "fontFamily": "Plus Jakarta Sans",
+    "theme": "indigo"
   },
   "auditLogs": [
     { "id": 1, "timestamp": "2026-06-22T14:00:00.000Z", "action": "SYSTEM_INITIALIZE", "user": "System", "details": "Database initialized with seed data." }

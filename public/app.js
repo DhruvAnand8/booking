@@ -36,6 +36,9 @@ async function fetchState() {
       currentUser = state.employees.find(e => e.id === currentUser.id) || currentUser;
     }
     
+    // Apply branding settings
+    applyBranding(state.systemSettings);
+    
     // Update global UI indicators
     updateGlobalIndicators();
     
@@ -837,6 +840,20 @@ function renderAdminBookings() {
 function renderAdminSettings() {
   document.getElementById('sys-grace-period').value = state.systemSettings.gracePeriod;
   
+  // Load branding values
+  if (state.systemSettings.companyName !== undefined) {
+    document.getElementById('sys-company-name').value = state.systemSettings.companyName;
+  }
+  if (state.systemSettings.logoUrl !== undefined) {
+    document.getElementById('sys-logo-url').value = state.systemSettings.logoUrl;
+  }
+  if (state.systemSettings.fontFamily !== undefined) {
+    document.getElementById('sys-font-family').value = state.systemSettings.fontFamily;
+  }
+  if (state.systemSettings.theme !== undefined) {
+    document.getElementById('sys-theme').value = state.systemSettings.theme;
+  }
+  
   // Render logs
   const list = document.getElementById('admin-audit-logs-list');
   let html = '';
@@ -1278,6 +1295,71 @@ function toast(msg, type = 'info') {
     t.remove();
   }, 3500);
 }
+
+function applyBranding(settings) {
+  if (!settings) return;
+  
+  // Apply font family
+  document.body.style.fontFamily = `"${settings.fontFamily || 'Plus Jakarta Sans'}", system-ui, -apple-system, sans-serif`;
+  
+  // Apply logo text
+  const logoTextEl = document.querySelector('.logo-text');
+  if (logoTextEl) logoTextEl.textContent = settings.companyName || 'BookMyRoom';
+  
+  // Apply logo image if present
+  const logoIconEl = document.querySelector('.logo-icon');
+  if (logoIconEl) {
+    if (settings.logoUrl && settings.logoUrl.trim() !== '') {
+      logoIconEl.innerHTML = `<img src="${settings.logoUrl.trim()}" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;">`;
+    } else {
+      // Restore default vector icon
+      logoIconEl.innerHTML = `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" stroke="white" stroke-width="2" fill="none"/><path d="M9 9h6M9 13h6M9 17h4" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>`;
+    }
+  }
+  
+  // Apply theme color variables
+  const themes = {
+    indigo: { primary: '#4F46E5', dark: '#3730A3', light: '#EEF2FF', glow: 'rgba(79, 70, 229, 0.15)' },
+    emerald: { primary: '#10B981', dark: '#047857', light: '#ECFDF5', glow: 'rgba(16, 185, 129, 0.15)' },
+    orange: { primary: '#F59E0B', dark: '#B45309', light: '#FFFBEB', glow: 'rgba(245, 158, 11, 0.15)' },
+    crimson: { primary: '#E11D48', dark: '#9F1239', light: '#FFF1F2', glow: 'rgba(225, 29, 72, 0.15)' },
+    dark: { primary: '#334155', dark: '#1E293B', light: '#F1F5F9', glow: 'rgba(51, 65, 85, 0.15)' }
+  };
+  
+  const activeTheme = themes[settings.theme || 'indigo'] || themes.indigo;
+  document.documentElement.style.setProperty('--primary', activeTheme.primary);
+  document.documentElement.style.setProperty('--primary-dark', activeTheme.dark);
+  document.documentElement.style.setProperty('--primary-light', activeTheme.light);
+  document.documentElement.style.setProperty('--primary-glow', activeTheme.glow);
+}
+
+async function saveBrandingSettings() {
+  const companyName = document.getElementById('sys-company-name').value || 'BookMyRoom';
+  const logoUrl = document.getElementById('sys-logo-url').value || '';
+  const fontFamily = document.getElementById('sys-font-family').value || 'Plus Jakarta Sans';
+  const theme = document.getElementById('sys-theme').value || 'indigo';
+  
+  try {
+    const res = await fetch('/api/system/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        companyName,
+        logoUrl,
+        fontFamily,
+        theme,
+        actor: currentUser.name
+      })
+    });
+    if (res.ok) {
+      toast('Appearance and branding settings updated!', 'success');
+      fetchState();
+    } else {
+      toast('Failed to save appearance parameters.', 'danger');
+    }
+  } catch (err) {
+    toast('Network communication error.', 'danger');
+  }
 
 // ======================== INITIALIZE ========================
 

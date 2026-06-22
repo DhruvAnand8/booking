@@ -395,7 +395,7 @@ app.post('/api/rfid/tap', (req, res) => {
 // 6. Settings endpoint
 app.post('/api/system/settings', (req, res) => {
   const db = readDb();
-  const { globalLockdown, gracePeriod, actor } = req.body;
+  const { globalLockdown, gracePeriod, companyName, logoUrl, fontFamily, theme, actor } = req.body;
   
   if (globalLockdown !== undefined) {
     db.systemSettings.globalLockdown = globalLockdown;
@@ -405,6 +405,23 @@ app.post('/api/system/settings', (req, res) => {
   if (gracePeriod !== undefined) {
     db.systemSettings.gracePeriod = parseInt(gracePeriod);
     addAuditLog(db, 'SETTINGS_CHANGE', actor || 'Admin', `System grace period set to ${gracePeriod} minutes`);
+  }
+  
+  if (companyName !== undefined) {
+    db.systemSettings.companyName = companyName;
+  }
+  
+  if (logoUrl !== undefined) {
+    db.systemSettings.logoUrl = logoUrl;
+  }
+  
+  if (fontFamily !== undefined) {
+    db.systemSettings.fontFamily = fontFamily;
+  }
+  
+  if (theme !== undefined) {
+    db.systemSettings.theme = theme;
+    addAuditLog(db, 'BRANDING_CHANGE', actor || 'Admin', `System appearance theme set to: ${theme}`);
   }
   
   writeDb(db);
