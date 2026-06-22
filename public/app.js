@@ -846,6 +846,19 @@ function renderAdminSettings() {
   }
   if (state.systemSettings.logoUrl !== undefined) {
     document.getElementById('sys-logo-url').value = state.systemSettings.logoUrl;
+    
+    // Configure file uploader name
+    const isBase64 = state.systemSettings.logoUrl.startsWith('data:image/png;base64,');
+    if (isBase64) {
+      document.getElementById('logo-file-name').textContent = "Uploaded PNG Logo";
+      document.getElementById('btn-clear-logo').style.display = 'inline-flex';
+    } else if (state.systemSettings.logoUrl.trim() !== '') {
+      document.getElementById('logo-file-name').textContent = "Image URL Configured";
+      document.getElementById('btn-clear-logo').style.display = 'inline-flex';
+    } else {
+      document.getElementById('logo-file-name').textContent = "No file chosen";
+      document.getElementById('btn-clear-logo').style.display = 'none';
+    }
   }
   if (state.systemSettings.fontFamily !== undefined) {
     document.getElementById('sys-font-family').value = state.systemSettings.fontFamily;
@@ -1307,7 +1320,7 @@ function applyBranding(settings) {
   const logoTextEl = document.querySelector('.logo-text');
   if (logoTextEl) logoTextEl.textContent = settings.companyName || 'BookMyRoom';
   
-  // Apply logo image if present
+  // Apply logo image in top header if present (as a small icon fallback/support)
   const logoIconEl = document.querySelector('.logo-icon');
   if (logoIconEl) {
     if (settings.logoUrl && settings.logoUrl.trim() !== '') {
@@ -1319,21 +1332,70 @@ function applyBranding(settings) {
       logoIconEl.innerHTML = `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" stroke="white" stroke-width="2" fill="none"/><path d="M9 9h6M9 13h6M9 17h4" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>`;
     }
   }
+
+  // Apply logo image in lower end sidebar branding footer
+  const footerLogoEl = document.getElementById('sidebar-footer-logo');
+  const footerLogoImgEl = document.getElementById('sidebar-footer-logo-img');
+  const footerLogoTextEl = document.getElementById('sidebar-footer-logo-text');
+  if (footerLogoEl && footerLogoImgEl && footerLogoTextEl) {
+    if (settings.logoUrl && settings.logoUrl.trim() !== '') {
+      footerLogoImgEl.src = settings.logoUrl.trim();
+      footerLogoTextEl.textContent = settings.companyName || 'BookMyRoom';
+      footerLogoEl.style.display = 'flex';
+    } else {
+      footerLogoEl.style.display = 'none';
+      footerLogoImgEl.src = '';
+    }
+  }
   
-  // Apply theme color variables
+  // Apply theme color variables (with darker shades for the Control Panel)
   const themes = {
-    indigo: { primary: '#4F46E5', dark: '#3730A3', light: '#EEF2FF', glow: 'rgba(79, 70, 229, 0.15)' },
-    emerald: { primary: '#10B981', dark: '#047857', light: '#ECFDF5', glow: 'rgba(16, 185, 129, 0.15)' },
-    orange: { primary: '#F59E0B', dark: '#B45309', light: '#FFFBEB', glow: 'rgba(245, 158, 11, 0.15)' },
-    crimson: { primary: '#E11D48', dark: '#9F1239', light: '#FFF1F2', glow: 'rgba(225, 29, 72, 0.15)' },
-    dark: { primary: '#334155', dark: '#1E293B', light: '#F1F5F9', glow: 'rgba(51, 65, 85, 0.15)' }
+    indigo: { primary: '#4F46E5', dark: '#3730A3', darker: '#1E1B4B', light: '#EEF2FF', glow: 'rgba(79, 70, 229, 0.15)' },
+    emerald: { primary: '#10B981', dark: '#047857', darker: '#064E3B', light: '#ECFDF5', glow: 'rgba(16, 185, 129, 0.15)' },
+    orange: { primary: '#F59E0B', dark: '#B45309', darker: '#78350F', light: '#FFFBEB', glow: 'rgba(245, 158, 11, 0.15)' },
+    crimson: { primary: '#E11D48', dark: '#9F1239', darker: '#4C0519', light: '#FFF1F2', glow: 'rgba(225, 29, 72, 0.15)' },
+    dark: { primary: '#334155', dark: '#1E293B', darker: '#0F172A', light: '#F1F5F9', glow: 'rgba(51, 65, 85, 0.15)' }
   };
   
   const activeTheme = themes[settings.theme || 'indigo'] || themes.indigo;
   document.documentElement.style.setProperty('--primary', activeTheme.primary);
   document.documentElement.style.setProperty('--primary-dark', activeTheme.dark);
+  document.documentElement.style.setProperty('--primary-darker', activeTheme.darker);
   document.documentElement.style.setProperty('--primary-light', activeTheme.light);
   document.documentElement.style.setProperty('--primary-glow', activeTheme.glow);
+}
+
+// Logo upload helper utilities
+let uploadedLogoBase64 = "";
+
+function handleLogoUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  if (file.type !== "image/png") {
+    toast("Please select a PNG image file.", "warning");
+    input.value = "";
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    uploadedLogoBase64 = e.target.result;
+    document.getElementById('sys-logo-url').value = uploadedLogoBase64;
+    document.getElementById('logo-file-name').textContent = file.name;
+    document.getElementById('btn-clear-logo').style.display = 'inline-flex';
+    toast("PNG logo loaded. Save settings to apply.", "success");
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearLogoImage() {
+  uploadedLogoBase64 = "";
+  document.getElementById('sys-logo-file').value = "";
+  document.getElementById('sys-logo-url').value = "";
+  document.getElementById('logo-file-name').textContent = "No file chosen";
+  document.getElementById('btn-clear-logo').style.display = 'none';
+  toast("Logo cleared. Save settings to apply.", "info");
 }
 
 function highlightActiveThemeCircle(themeName) {

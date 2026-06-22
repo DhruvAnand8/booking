@@ -77,6 +77,14 @@
         <option value="admin">Admin</option>
       </select>
     </div>
+
+    <!-- Lower End Sidebar Branding Logo -->
+    <div class="sidebar-branding-footer" id="sidebar-footer-logo" style="display: none;">
+      <div class="footer-logo-wrap">
+        <img id="sidebar-footer-logo-img" src="" alt="Company Logo">
+      </div>
+      <div class="footer-logo-text" id="sidebar-footer-logo-text">BookMyRoom</div>
+    </div>
   </aside>
 
   <!-- MAIN -->
@@ -554,8 +562,18 @@
                 </div>
 
                 <div class="settings-group">
-                  <label class="form-label">Company Logo Image URL</label>
-                  <input type="text" class="form-input" id="sys-logo-url" placeholder="https://example.com/logo.png">
+                  <label class="form-label">Company Logo (PNG Image)</label>
+                  <p class="settings-desc">Upload a custom PNG logo to display on the lower end of the sidebar.</p>
+                  <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+                    <input type="file" id="sys-logo-file" accept="image/png" style="display: none;" onchange="handleLogoUpload(this)">
+                    <button class="btn btn-outline" onclick="document.getElementById('sys-logo-file').click()" type="button">
+                      <svg viewBox="0 0 24 24" style="stroke:currentColor; fill:none; stroke-width:2.2; width:16px; height:16px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round"/></svg>
+                      Upload PNG
+                    </button>
+                    <span id="logo-file-name" style="font-size: 12.5px; color: var(--slate-500); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">No file chosen</span>
+                    <button class="btn btn-danger btn-sm" id="btn-clear-logo" onclick="clearLogoImage()" style="display: none;" type="button">Remove</button>
+                  </div>
+                  <input type="text" class="form-input" id="sys-logo-url" placeholder="Or enter logo Image URL here (Optional)">
                 </div>
 
                 <div class="form-row">

@@ -1750,3 +1750,131 @@ textarea.form-input {
   background: transparent;
   box-shadow: none;
 }
+
+/* SIDEBAR FOOTER BRANDING */
+.sidebar-branding-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto; /* Push branding footer to bottom of flex column container */
+}
+
+.footer-logo-wrap {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.footer-logo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.footer-logo-text {
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.2px;
+}
+
+/* DARKER THEMED CONTROL PANEL CARDS */
+.admin-dashboard-layout .glass {
+  background: var(--primary-darker);
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Headings in control panel */
+.admin-dashboard-layout h3, 
+.admin-dashboard-layout h4 {
+  color: var(--white) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Tables inside control panel */
+.admin-dashboard-layout .data-table th {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.6);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-dashboard-layout .data-table td {
+  color: rgba(255, 255, 255, 0.85);
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+.admin-dashboard-layout .data-table tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Inputs inside control panel settings */
+.admin-dashboard-layout .form-input {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--white);
+}
+
+.admin-dashboard-layout .form-input:focus {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.admin-dashboard-layout .form-label {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.admin-dashboard-layout .settings-desc {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Audit log items in control panel settings */
+.admin-dashboard-layout .audit-log-item {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.admin-dashboard-layout .audit-log-details {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.admin-dashboard-layout .audit-log-time {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.admin-dashboard-layout .audit-log-action {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+}
+
+/* Admin Tabs */
+.admin-dashboard-layout .admin-tabs {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.admin-dashboard-layout .admin-tab {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.admin-dashboard-layout .admin-tab:hover {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.admin-dashboard-layout .admin-tab.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+}
