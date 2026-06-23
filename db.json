@@ -130,7 +130,11 @@
       "initials": "AK",
       "color": "#EDE9FE",
       "textColor": "#534AB7",
-      "role": "employee"
+      "role": "employee",
+      "username": "arjun",
+      "password": "arjunpassword123",
+      "totpSecret": "EMPLOYEESECRET56",
+      "email": "arjun@bookmyroom.com"
     },
     {
       "id": "E002",
@@ -140,7 +144,11 @@
       "initials": "PM",
       "color": "#E1F5EE",
       "textColor": "#0F6E56",
-      "role": "manager"
+      "role": "manager",
+      "username": "priya",
+      "password": "priyapassword123",
+      "totpSecret": "MANAGERSECRET567",
+      "email": "priya@bookmyroom.com"
     },
     {
       "id": "E003",
@@ -150,7 +158,11 @@
       "initials": "RS",
       "color": "#FAECE7",
       "textColor": "#993C1D",
-      "role": "employee"
+      "role": "employee",
+      "username": "rahul",
+      "password": "rahulpassword123",
+      "totpSecret": "DESIGNERSECRET56",
+      "email": "rahul@bookmyroom.com"
     },
     {
       "id": "E004",
@@ -160,7 +172,11 @@
       "initials": "NG",
       "color": "#FAEEDA",
       "textColor": "#854F0B",
-      "role": "employee"
+      "role": "employee",
+      "username": "neha",
+      "password": "nehapassword123",
+      "totpSecret": "MARKETERSECRET56",
+      "email": "neha@bookmyroom.com"
     },
     {
       "id": "E005",
@@ -170,7 +186,59 @@
       "initials": "VS",
       "color": "#FBEAF0",
       "textColor": "#993556",
-      "role": "admin"
+      "role": "admin",
+      "username": "admin",
+      "password": "adminpassword123",
+      "totpSecret": "ADMINSECRET34567",
+      "email": "admin@bookmyroom.com"
+    },
+    {
+      "id": "E006",
+      "name": "Test Account",
+      "tag": "RF-89EC",
+      "dept": "Engineering",
+      "initials": "TA",
+      "color": "#FAECE7",
+      "textColor": "#993C1D",
+      "role": "employee",
+      "username": "test_1782188064721",
+      "password": "password123",
+      "totpSecret": "YG3IHXWI6UYD5D53",
+      "email": "test@example.com"
+    },
+    {
+      "id": "E007",
+      "name": "dhruv",
+      "tag": "RF-F810",
+      "dept": "Engineering",
+      "initials": "D",
+      "color": "#E0F2FE",
+      "textColor": "#0369A1",
+      "role": "employee",
+      "username": "1234",
+      "password": "Dhruv",
+      "totpSecret": "B4C4LYOAM4NOJRMP",
+      "email": "dv08oct@gmail.com"
+    },
+    {
+      "id": "E008",
+      "name": "Authorized Test User",
+      "tag": "RF-E007",
+      "dept": "QA",
+      "initials": "ATU",
+      "color": "#EDE9FE",
+      "textColor": "#534AB7",
+      "role": "employee"
+    },
+    {
+      "id": "E009",
+      "name": "Divyam",
+      "tag": "4231",
+      "dept": "IT",
+      "initials": "D",
+      "color": "#EDE9FE",
+      "textColor": "#534AB7",
+      "role": "manager"
     }
   ],
   "bookings": [
@@ -269,6 +337,18 @@
       "status": "approved",
       "checkin": null,
       "checkout": null
+    },
+    {
+      "id": 9,
+      "empId": "E005",
+      "room": "Floor 2 Meeting Room 1",
+      "date": "2026-06-23",
+      "start": "13:00",
+      "duration": "1 hour",
+      "purpose": "Client meeting",
+      "status": "approved",
+      "checkin": null,
+      "checkout": null
     }
   ],
   "rfidLog": [
@@ -340,9 +420,270 @@
     "companyName": "BookMyRoom",
     "logoUrl": "",
     "fontFamily": "Outfit",
-    "theme": "indigo"
+    "theme": "#669c35",
+    "clientName": "",
+    "clientLogoUrl": ""
   },
   "auditLogs": [
+    {
+      "id": 77,
+      "timestamp": "2026-06-23T05:01:51.093Z",
+      "action": "USER_LOGIN",
+      "user": "Vikram Singh",
+      "details": "Vikram Singh (admin) logged in successfully via 2FA."
+    },
+    {
+      "id": 76,
+      "timestamp": "2026-06-23T05:00:13.663Z",
+      "action": "BOOKING_DELETE",
+      "user": "System",
+      "details": "Cancelled reservation for Floor 3 Meeting Room 3 on 2026-06-23"
+    },
+    {
+      "id": 75,
+      "timestamp": "2026-06-23T05:00:13.654Z",
+      "action": "AUTO_APPROVE",
+      "user": "System",
+      "details": "Auto-approved pending booking ID 10 for Floor 3 Meeting Room 3 as slot starts in <30 mins and room is available."
+    },
+    {
+      "id": 74,
+      "timestamp": "2026-06-23T05:00:13.650Z",
+      "action": "BOOKING_CREATE",
+      "user": "Arjun Kapoor",
+      "details": "Requested reservation for Floor 3 Meeting Room 3 on 2026-06-23 at 10:45"
+    },
+    {
+      "id": 73,
+      "timestamp": "2026-06-23T05:00:06.375Z",
+      "action": "USER_LOGIN",
+      "user": "dhruv",
+      "details": "dhruv (employee) logged in successfully via 2FA."
+    },
+    {
+      "id": 72,
+      "timestamp": "2026-06-23T04:59:41.670Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: #669c35"
+    },
+    {
+      "id": 71,
+      "timestamp": "2026-06-23T04:59:36.662Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: #53d5fd"
+    },
+    {
+      "id": 70,
+      "timestamp": "2026-06-23T04:52:55.189Z",
+      "action": "BOOKING_CREATE",
+      "user": "Vikram Singh",
+      "details": "Requested reservation for Floor 2 Meeting Room 1 on 2026-06-23 at 13:00"
+    },
+    {
+      "id": 69,
+      "timestamp": "2026-06-23T04:47:10.044Z",
+      "action": "BOOKING_DELETE",
+      "user": "System",
+      "details": "Cancelled reservation for Floor 2 Conference Room on 2026-06-23"
+    },
+    {
+      "id": 68,
+      "timestamp": "2026-06-23T04:47:10.042Z",
+      "action": "BOOKING_CREATE",
+      "user": "Arjun Kapoor",
+      "details": "Requested reservation for Floor 2 Conference Room on 2026-06-23 at 12:00"
+    },
+    {
+      "id": 67,
+      "timestamp": "2026-06-23T04:46:29.154Z",
+      "action": "BOOKING_DELETE",
+      "user": "System",
+      "details": "Cancelled reservation for Floor 2 Conference Room on 2026-06-23"
+    },
+    {
+      "id": 66,
+      "timestamp": "2026-06-23T04:46:29.149Z",
+      "action": "BOOKING_CREATE",
+      "user": "Arjun Kapoor",
+      "details": "Requested reservation for Floor 2 Conference Room on 2026-06-23 at 12:00"
+    },
+    {
+      "id": 65,
+      "timestamp": "2026-06-23T04:46:29.148Z",
+      "action": "BOOKING_CREATE",
+      "user": "Arjun Kapoor",
+      "details": "Requested reservation for Floor 2 Conference Room on 2026-06-23 at 10:30"
+    },
+    {
+      "id": 64,
+      "timestamp": "2026-06-23T04:46:29.142Z",
+      "action": "BOOKING_CREATE",
+      "user": "Arjun Kapoor",
+      "details": "Requested reservation for Floor 2 Conference Room on 2026-06-23 at 11:00"
+    },
+    {
+      "id": 63,
+      "timestamp": "2026-06-23T04:42:34.528Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: #53d5fd"
+    },
+    {
+      "id": 62,
+      "timestamp": "2026-06-23T04:42:29.471Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: #94e3fe"
+    },
+    {
+      "id": 61,
+      "timestamp": "2026-06-23T04:23:37.582Z",
+      "action": "EMPLOYEE_CREATE",
+      "user": "Vikram Singh",
+      "details": "Registered new employee Divyam with RFID tag 4231 (manager)"
+    },
+    {
+      "id": 60,
+      "timestamp": "2026-06-23T04:21:56.598Z",
+      "action": "EMPLOYEE_CREATE",
+      "user": "admin",
+      "details": "Registered new employee Authorized Test User with RFID tag RF-E007 (employee)"
+    },
+    {
+      "id": 59,
+      "timestamp": "2026-06-23T04:21:36.135Z",
+      "action": "USER_LOGIN",
+      "user": "Vikram Singh",
+      "details": "Vikram Singh (admin) logged in successfully via 2FA."
+    },
+    {
+      "id": 58,
+      "timestamp": "2026-06-23T04:16:14.743Z",
+      "action": "USER_LOGIN",
+      "user": "dhruv",
+      "details": "dhruv (employee) logged in successfully via 2FA."
+    },
+    {
+      "id": 57,
+      "timestamp": "2026-06-23T04:16:01.787Z",
+      "action": "USER_REGISTER",
+      "user": "dhruv",
+      "details": "Self-registered new employee account: 1234 (RFID: RF-F810)"
+    },
+    {
+      "id": 56,
+      "timestamp": "2026-06-23T04:14:24.757Z",
+      "action": "USER_REGISTER",
+      "user": "Test Account",
+      "details": "Self-registered new employee account: test_1782188064721 (RFID: RF-89EC)"
+    },
+    {
+      "id": 55,
+      "timestamp": "2026-06-22T19:13:14.443Z",
+      "action": "USER_LOGIN",
+      "user": "Vikram Singh",
+      "details": "Vikram Singh (admin) logged in successfully via 2FA."
+    },
+    {
+      "id": 54,
+      "timestamp": "2026-06-22T19:05:43.348Z",
+      "action": "USER_LOGIN",
+      "user": "Vikram Singh",
+      "details": "Vikram Singh (admin) logged in successfully via 2FA."
+    },
+    {
+      "id": 53,
+      "timestamp": "2026-06-22T18:40:47.486Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: #00d0e0"
+    },
+    {
+      "id": 52,
+      "timestamp": "2026-06-22T18:40:44.424Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: #00d9e0"
+    },
+    {
+      "id": 51,
+      "timestamp": "2026-06-22T18:40:40.089Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: #00d9df"
+    },
+    {
+      "id": 50,
+      "timestamp": "2026-06-22T18:40:37.762Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: #5c85e4"
+    },
+    {
+      "id": 49,
+      "timestamp": "2026-06-22T18:40:17.609Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: #f100ce"
+    },
+    {
+      "id": 48,
+      "timestamp": "2026-06-22T18:40:15.356Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: #f00a06"
+    },
+    {
+      "id": 47,
+      "timestamp": "2026-06-22T18:40:12.887Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: #00e000"
+    },
+    {
+      "id": 46,
+      "timestamp": "2026-06-22T18:21:38.910Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: indigo"
+    },
+    {
+      "id": 45,
+      "timestamp": "2026-06-22T18:21:26.860Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: indigo"
+    },
+    {
+      "id": 44,
+      "timestamp": "2026-06-22T18:21:24.807Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: crimson"
+    },
+    {
+      "id": 43,
+      "timestamp": "2026-06-22T18:21:18.790Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: crimson"
+    },
+    {
+      "id": 42,
+      "timestamp": "2026-06-22T18:21:17.092Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: indigo"
+    },
+    {
+      "id": 41,
+      "timestamp": "2026-06-22T18:21:11.942Z",
+      "action": "BRANDING_CHANGE",
+      "user": "Vikram Singh",
+      "details": "System appearance theme set to: indigo"
+    },
     {
       "id": 40,
       "timestamp": "2026-06-22T18:13:35.924Z",

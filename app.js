@@ -1,3 +1,18 @@
+// Global fetch interceptor to support separate backend hosting (e.g. on Render)
+// REPLACE this URL with your actual deployed Render backend URL when you configure it.
+const BACKEND_URL = 'https://room-booking-backend.onrender.com';
+
+const originalFetch = window.fetch;
+window.fetch = function (url, options) {
+  if (typeof url === 'string' && url.startsWith('/api/')) {
+    // If running on GitHub Pages (not localhost), route requests to the hosted backend
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      url = BACKEND_URL.replace(/\/$/, '') + url;
+    }
+  }
+  return originalFetch(url, options);
+};
+
 // ======================== STATE ========================
 
 let state = {
@@ -21,19 +36,27 @@ const DAYS = ['Mon 23', 'Tue 24', 'Wed 25', 'Thu 26', 'Fri 27'];
 const HOURS = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
 
 // ======================== CORE OPERATIONS ========================
-
 async function fetchState() {
   try {
     const res = await fetch('/api/state');
     if (!res.ok) throw new Error('API server returned error');
     state = await res.json();
     
-    // Auto-select user if not set
-    if (!currentUser) {
-      currentUser = state.employees.find(e => e.id === 'E001') || state.employees[0];
+    // Check if session is stored in localStorage
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+      const parsedUser = JSON.parse(savedUser);
+      currentUser = state.employees.find(e => e.id === parsedUser.id) || parsedUser;
+      currentRole = currentUser.role;
+      const overlay = document.getElementById('login-overlay');
+      if (overlay) overlay.style.display = 'none';
+      const roleSel = document.getElementById('role-select');
+      if (roleSel) roleSel.value = currentRole;
     } else {
-      // Refresh current user object from state to sync role/details
-      currentUser = state.employees.find(e => e.id === currentUser.id) || currentUser;
+      currentUser = null;
+      const overlay = document.getElementById('login-overlay');
+      if (overlay) overlay.style.display = 'flex';
+      return; // Stop execution of other UI updates until login
     }
     
     // Apply branding settings
@@ -49,7 +72,6 @@ async function fetchState() {
     toast('Server connection offline. Retrying...', 'danger');
   }
 }
-
 function updateGlobalIndicators() {
   // Sidebar roles and profiles
   document.getElementById('sidebar-name').textContent = currentUser.name;
@@ -145,23 +167,16 @@ function renderPage(page) {
 }
 
 function switchRole(role) {
-  currentRole = role;
-  
-  // Set matching user profiles from seed db for demonstration purposes
-  if (role === 'manager') {
-    currentUser = state.employees.find(e => e.role === 'manager') || currentUser;
-    toast('Switched to Manager profile', 'success');
-  } else if (role === 'admin') {
-    currentUser = state.employees.find(e => e.role === 'admin') || currentUser;
-    toast('Switched to Administrator profile', 'success');
-  } else {
-    currentUser = state.employees.find(e => e.role === 'employee') || currentUser;
-    toast('Switched to Employee profile', 'info');
-  }
-  
-  document.getElementById('role-select').value = role;
-  updateGlobalIndicators();
-  renderPage(currentPage);
+  logout();
+  const usernameMap = {
+    admin: 'admin',
+    manager: 'priya',
+    employee: 'arjun'
+  };
+  const username = usernameMap[role] || 'arjun';
+  const userField = document.getElementById('login-username');
+  if (userField) userField.value = username;
+  toast(`Logging out. Prefilled ${role.toUpperCase()} credentials.`, 'info');
 }
 
 // ======================== DASHBOARD VIEW ========================
@@ -169,7 +184,7 @@ function switchRole(role) {
 function renderDashboard() {
   // Counters
   document.getElementById('dash-rooms-count').textContent = state.rooms.length;
-  document.getElementById('dash-bookings-count').textContent = state.bookings.filter(b => b.date === '2026-06-23').length;
+  document.getElementById('dash-bookings-count').textContent = state.bookings.filter(b => !b.checkout).length;
   
   const pending = state.bookings.filter(b => b.status === 'pending').length;
   document.getElementById('dash-pending').textContent = pending;
@@ -242,18 +257,18 @@ function renderTodayGrid() {
       if (b) {
         const emp = state.employees.find(e => e.id === b.empId);
         titleAttr = `${emp ? emp.name : 'User'} — ${b.purpose}`;
-        if (b.empId === currentUser.id) {
-          cls = 'slot-mine';
-          label = emp ? emp.initials : 'Me';
-        } else if (b.status === 'pending') {
+        if (b.status === 'pending') {
           cls = 'slot-pending';
           label = emp ? emp.initials : '?';
+        } else if (b.empId === currentUser.id) {
+          cls = 'slot-mine';
+          label = emp ? emp.initials : 'Me';
         } else {
           cls = 'slot-booked';
           label = emp ? emp.initials : 'In';
         }
       }
-      bodyHtml += `<td><div class="slot ${cls}" title="${titleAttr}">${label}</div></td>`;
+      bodyHtml += `<td><div class="slot ${cls}" title="${titleAttr}" onclick="handleDashboardCellClick('${r.name}', '${h}')" style="cursor: pointer;">${label}</div></td>`;
     });
     bodyHtml += '</tr>';
   });
@@ -282,7 +297,15 @@ async function submitBooking() {
   const date = document.getElementById('book-date').value;
   const start = document.getElementById('book-start').value;
   const duration = document.getElementById('book-duration').value;
-  const purpose = document.getElementById('book-purpose').value || 'Sync Meeting';
+  
+  const purposeSelect = document.getElementById('book-purpose-select');
+  let purpose = 'Client meeting';
+  if (purposeSelect) {
+    purpose = purposeSelect.value;
+    if (purpose === 'More') {
+      purpose = document.getElementById('book-purpose-custom').value.trim() || 'More';
+    }
+  }
   
   if (!date || !start) {
     return toast('Please select date and start time.', 'warning');
@@ -305,17 +328,22 @@ async function submitBooking() {
     
     if (res.ok) {
       toast('Booking request sent successfully!', 'success');
+      // Reset purpose input
+      if (purposeSelect) {
+        purposeSelect.value = 'Client meeting';
+        document.getElementById('book-purpose-custom-container').style.display = 'none';
+        document.getElementById('book-purpose-custom').value = '';
+      }
       showPage('mybookings');
       fetchState();
     } else {
-      toast('Failed to register booking.', 'danger');
+      const errData = await res.json().catch(() => ({}));
+      toast(errData.message || 'Failed to register booking.', 'danger');
     }
   } catch (err) {
     toast('Network error saving booking.', 'danger');
   }
-}
-
-// ======================== WEEKLY TIMETABLE VIEW ========================
+}// ======================== WEEKLY TIMETABLE VIEW ========================
 
 function renderWeekTimetable() {
   const table = document.getElementById('week-timetable');
@@ -358,10 +386,10 @@ function renderWeekTimetable() {
         const b = matchedBookings[0];
         const emp = state.employees.find(e => e.id === b.empId);
         let cls = 'slot-booked';
-        if (b.empId === currentUser.id) cls = 'slot-mine';
-        else if (b.status === 'pending') cls = 'slot-pending';
+        if (b.status === 'pending') cls = 'slot-pending';
+        else if (b.empId === currentUser.id) cls = 'slot-mine';
         
-        html += `<td><div class="slot ${cls}" title="${emp ? emp.name : 'User'} — ${b.room} — ${b.purpose}">${emp ? emp.initials : '?'}</div></td>`;
+        html += `<td><div class="slot ${cls}" title="${emp ? emp.name : 'User'} — ${b.room} — ${b.purpose}" onclick="handleDashboardCellClick('${b.room}', '${b.start}', '${b.date}')" style="cursor: pointer;">${emp ? emp.initials : '?'}</div></td>`;
       } else {
         html += `<td><div class="slot slot-available" onclick="openDirectBookingAt('${dateStr}', '${h}')">+</div></td>`;
       }
@@ -860,12 +888,47 @@ function renderAdminSettings() {
       document.getElementById('btn-clear-logo').style.display = 'none';
     }
   }
+
+  // Load secondary branding values
+  if (state.systemSettings.clientName !== undefined) {
+    document.getElementById('sys-client-name').value = state.systemSettings.clientName;
+  }
+  if (state.systemSettings.clientLogoUrl !== undefined) {
+    document.getElementById('sys-client-logo-url').value = state.systemSettings.clientLogoUrl;
+    
+    // Configure file uploader name
+    const isBase64 = state.systemSettings.clientLogoUrl.startsWith('data:image/png;base64,');
+    if (isBase64) {
+      document.getElementById('client-logo-file-name').textContent = "Uploaded PNG Logo";
+      document.getElementById('btn-clear-client-logo').style.display = 'inline-flex';
+    } else if (state.systemSettings.clientLogoUrl.trim() !== '') {
+      document.getElementById('client-logo-file-name').textContent = "Image URL Configured";
+      document.getElementById('btn-clear-client-logo').style.display = 'inline-flex';
+    } else {
+      document.getElementById('client-logo-file-name').textContent = "No file chosen";
+      document.getElementById('btn-clear-client-logo').style.display = 'none';
+    }
+  }
+
   if (state.systemSettings.fontFamily !== undefined) {
     document.getElementById('sys-font-family').value = state.systemSettings.fontFamily;
   }
   if (state.systemSettings.theme !== undefined) {
-    document.getElementById('sys-theme').value = state.systemSettings.theme;
-    highlightActiveThemeCircle(state.systemSettings.theme);
+    const themeVal = state.systemSettings.theme;
+    const legacyToHex = {
+      indigo: '#4F46E5',
+      emerald: '#10B981',
+      orange: '#F59E0B',
+      crimson: '#E11D48',
+      dark: '#334155'
+    };
+    const hexVal = themeVal.startsWith('#') ? themeVal : (legacyToHex[themeVal] || '#4F46E5');
+    const picker = document.getElementById('sys-theme-picker');
+    if (picker) picker.value = hexVal;
+    const btn = document.getElementById('sys-theme-color-btn');
+    if (btn) btn.style.background = hexVal;
+    const label = document.getElementById('sys-theme-color-hex');
+    if (label) label.textContent = hexVal.toUpperCase();
   }
   
   // Render logs
@@ -960,11 +1023,112 @@ function renderAdminAnalytics() {
 
 // ======================== MODALS CONTROLLERS ========================
 
+function handleDashboardCellClick(roomName, time, dateStr = '2026-06-23') {
+  const booking = state.bookings.find(bk => bk.room === roomName && bk.date === dateStr && bk.start === time);
+  
+  if (booking) {
+    // Show booking summary modal
+    const emp = state.employees.find(e => e.id === booking.empId) || { name: 'Unknown', dept: 'System' };
+    
+    document.getElementById('summary-booking-id').textContent = `Booking ID: #${booking.id}`;
+    document.getElementById('summary-room-name').textContent = booking.room;
+    document.getElementById('summary-time').textContent = `${booking.start} · ${booking.duration}`;
+    document.getElementById('summary-employee').textContent = `${emp.name} (${emp.dept})`;
+    
+    const emailField = document.getElementById('summary-email');
+    if (emailField) {
+      emailField.textContent = emp.email || (emp.username ? `${emp.username}@bookmyroom.com` : 'no-email@bookmyroom.com');
+    }
+    
+    const statusContainer = document.getElementById('summary-status');
+    statusContainer.innerHTML = statusBadge(booking.status);
+    
+    document.getElementById('summary-purpose').textContent = booking.purpose || 'No description provided.';
+    
+    const modalContainer = document.querySelector('#booking-summary-modal .modal');
+    if (modalContainer) {
+      modalContainer.classList.remove('status-pending', 'status-approved', 'status-rejected', 'status-checkedin', 'status-completed');
+      modalContainer.classList.add(`status-${booking.status}`);
+    }
+    
+    const modalIcon = document.querySelector('#booking-summary-modal .modal-icon');
+    if (modalIcon) {
+      if (booking.status === 'pending') {
+        modalIcon.style.background = 'var(--warning-glow)';
+        modalIcon.style.color = 'var(--warning)';
+      } else if (booking.status === 'rejected') {
+        modalIcon.style.background = 'var(--danger-glow)';
+        modalIcon.style.color = 'var(--danger)';
+      } else if (booking.status === 'approved') {
+        modalIcon.style.background = 'var(--success-glow)';
+        modalIcon.style.color = 'var(--success)';
+      } else {
+        modalIcon.style.background = 'var(--primary-glow)';
+        modalIcon.style.color = 'var(--primary)';
+      }
+    }
+    
+    const footer = document.getElementById('summary-modal-foot');
+    if (booking.empId === currentUser.id || currentUser.role === 'manager' || currentUser.role === 'admin') {
+      footer.innerHTML = `
+        <button class="btn btn-danger" onclick="cancelSummaryBooking(${booking.id})">Cancel Booking</button>
+        <button class="btn btn-outline" onclick="closeSummaryModal()">Close</button>
+      `;
+    } else {
+      footer.innerHTML = `
+        <button class="btn btn-outline" style="width: 100%;" onclick="closeSummaryModal()">Close</button>
+      `;
+    }
+    
+    document.getElementById('booking-summary-modal').classList.add('open');
+  } else {
+    // Open Quick Booking Modal with prefilled parameters
+    const matchFloor = roomName.match(/Floor (\d+)/);
+    const floorVal = matchFloor ? matchFloor[1] : '1';
+    
+    const roomType = roomName.replace(/Floor \d+\s+/, '');
+    
+    document.getElementById('m-floor').value = floorVal;
+    document.getElementById('m-type').value = roomType;
+    document.getElementById('m-time').value = time;
+    document.getElementById('m-date').value = dateStr; // Prefill the clicked date
+    updateQuickBookResolution();
+    
+    const mPurposeSelect = document.getElementById('m-purpose-select');
+    if (mPurposeSelect) {
+      mPurposeSelect.value = 'Client meeting';
+      document.getElementById('m-purpose-custom-container').style.display = 'none';
+      document.getElementById('m-purpose-custom').value = '';
+    }
+
+    document.getElementById('book-modal').classList.add('open');
+  }
+}
+
+function closeSummaryModal() {
+  document.getElementById('booking-summary-modal').classList.remove('open');
+}
+
+async function cancelSummaryBooking(id) {
+  if (!confirm('Are you sure you want to cancel this reservation?')) return;
+  closeSummaryModal();
+  await cancelBooking(id);
+}
+
 // 1. Booking Modals
 function openBookModal() {
   document.getElementById('m-floor').value = '1';
   document.getElementById('m-type').value = 'Conference Room';
   updateQuickBookResolution();
+  
+  // Initialize purpose fields
+  const mPurposeSelect = document.getElementById('m-purpose-select');
+  if (mPurposeSelect) {
+    mPurposeSelect.value = 'Client meeting';
+    document.getElementById('m-purpose-custom-container').style.display = 'none';
+    document.getElementById('m-purpose-custom').value = '';
+  }
+
   document.getElementById('book-modal').classList.add('open');
 }
 
@@ -984,7 +1148,15 @@ async function submitQuickBooking() {
   const date = document.getElementById('m-date').value;
   const time = document.getElementById('m-time').value;
   const duration = document.getElementById('m-duration').value;
-  const purpose = document.getElementById('m-purpose').value || 'Sync';
+  
+  const mPurposeSelect = document.getElementById('m-purpose-select');
+  let purpose = 'Client meeting';
+  if (mPurposeSelect) {
+    purpose = mPurposeSelect.value;
+    if (purpose === 'More') {
+      purpose = document.getElementById('m-purpose-custom').value.trim() || 'More';
+    }
+  }
   
   try {
     const res = await fetch('/api/bookings', {
@@ -1004,6 +1176,9 @@ async function submitQuickBooking() {
       toast('Booking request submitted!', 'success');
       closeModal();
       fetchState();
+    } else {
+      const errData = await res.json().catch(() => ({}));
+      toast(errData.message || 'API error', 'danger');
     }
   } catch (err) {
     toast('API error', 'danger');
@@ -1025,7 +1200,12 @@ function openAdminAddBookingModal() {
 
   // Clear fields
   document.getElementById('admin-booking-id').value = '';
-  document.getElementById('admin-booking-purpose').value = '';
+  const adminPurposeSelect = document.getElementById('admin-booking-purpose-select');
+  if (adminPurposeSelect) {
+    adminPurposeSelect.value = 'Client meeting';
+    document.getElementById('admin-booking-purpose-custom-container').style.display = 'none';
+    document.getElementById('admin-booking-purpose-custom').value = '';
+  }
   document.getElementById('admin-booking-status').value = 'approved';
   document.getElementById('admin-booking-title').textContent = 'Create Administrative Reservation';
 
@@ -1059,7 +1239,20 @@ function openAdminEditBookingModal(bookingId) {
   document.getElementById('admin-booking-start').value = b.start;
   document.getElementById('admin-booking-duration').value = b.duration;
   document.getElementById('admin-booking-status').value = b.status;
-  document.getElementById('admin-booking-purpose').value = b.purpose;
+  
+  const adminPurposeSelect = document.getElementById('admin-booking-purpose-select');
+  if (adminPurposeSelect) {
+    const predefined = ["Client meeting", "Calling", "Board Meeting", "Group Discussion"];
+    if (predefined.includes(b.purpose)) {
+      adminPurposeSelect.value = b.purpose;
+      document.getElementById('admin-booking-purpose-custom-container').style.display = 'none';
+      document.getElementById('admin-booking-purpose-custom').value = '';
+    } else {
+      adminPurposeSelect.value = 'More';
+      document.getElementById('admin-booking-purpose-custom-container').style.display = 'block';
+      document.getElementById('admin-booking-purpose-custom').value = b.purpose;
+    }
+  }
   
   document.getElementById('admin-booking-title').textContent = 'Edit/Reschedule Reservation';
 }
@@ -1076,7 +1269,15 @@ async function saveAdminBookingSubmit() {
   const start = document.getElementById('admin-booking-start').value;
   const duration = document.getElementById('admin-booking-duration').value;
   const status = document.getElementById('admin-booking-status').value;
-  const purpose = document.getElementById('admin-booking-purpose').value || 'Sync';
+  
+  const adminPurposeSelect = document.getElementById('admin-booking-purpose-select');
+  let purpose = 'Client meeting';
+  if (adminPurposeSelect) {
+    purpose = adminPurposeSelect.value;
+    if (purpose === 'More') {
+      purpose = document.getElementById('admin-booking-purpose-custom').value.trim() || 'More';
+    }
+  }
   
   const payload = { empId, room, date, start, duration, status, purpose, actor: currentUser.name };
   
@@ -1102,6 +1303,9 @@ async function saveAdminBookingSubmit() {
       toast('Booking updated successfully.', 'success');
       closeAdminBookingModal();
       fetchState();
+    } else {
+      const errData = await res.json().catch(() => ({}));
+      toast(errData.message || 'API write failed', 'danger');
     }
   } catch (err) {
     toast('API write failed', 'danger');
@@ -1310,6 +1514,44 @@ function toast(msg, type = 'info') {
   }, 3500);
 }
 
+function hexToHsl(hex) {
+  // Convert hex to rgb first
+  let r = 0, g = 0, b = 0;
+  if (hex.length === 4) {
+    r = parseInt(hex[1] + hex[1], 16);
+    g = parseInt(hex[2] + hex[2], 16);
+    b = parseInt(hex[3] + hex[3], 16);
+  } else if (hex.length === 7) {
+    r = parseInt(hex.substring(1, 3), 16);
+    g = parseInt(hex.substring(3, 5), 16);
+    b = parseInt(hex.substring(5, 7), 16);
+  }
+  // Convert rgb to hsl
+  r /= 255;
+  g /= 255;
+  b /= 255;
+  let max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h, s, l = (max + min) / 2;
+
+  if (max === min) {
+    h = s = 0; // achromatic
+  } else {
+    let d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+  return {
+    h: Math.round(h * 360),
+    s: Math.round(s * 100),
+    l: Math.round(l * 100)
+  };
+}
+
 function applyBranding(settings) {
   if (!settings) return;
   
@@ -1351,17 +1593,57 @@ function applyBranding(settings) {
       footerLogoTextEl.textContent = '';
     }
   }
+
+  // Apply secondary custom company logo and name above employee details
+  const clientLogoEl = document.getElementById('sidebar-client-logo');
+  const clientLogoImgEl = document.getElementById('sidebar-client-logo-img');
+  const clientLogoTextEl = document.getElementById('sidebar-client-logo-text');
+  if (clientLogoEl && clientLogoImgEl && clientLogoTextEl) {
+    const hasCustomName = settings.clientName && settings.clientName.trim() !== '';
+    const hasCustomLogo = settings.clientLogoUrl && settings.clientLogoUrl.trim() !== '';
+    
+    if (hasCustomName || hasCustomLogo) {
+      if (hasCustomLogo) {
+        clientLogoImgEl.src = settings.clientLogoUrl.trim();
+        clientLogoImgEl.style.display = 'block';
+      } else {
+        clientLogoImgEl.src = '';
+        clientLogoImgEl.style.display = 'none';
+      }
+      clientLogoTextEl.textContent = hasCustomName ? settings.clientName : '';
+      clientLogoEl.style.display = 'flex';
+    } else {
+      clientLogoEl.style.display = 'none';
+      clientLogoImgEl.src = '';
+      clientLogoTextEl.textContent = '';
+    }
+  }
   
   // Apply theme color variables (with darker shades for the Control Panel)
-  const themes = {
+  let activeTheme;
+  const legacyThemes = {
     indigo: { primary: '#4F46E5', dark: '#3730A3', darker: '#1E1B4B', sidebar: '#0e1022', light: '#EEF2FF', glow: 'rgba(79, 70, 229, 0.15)' },
     emerald: { primary: '#10B981', dark: '#047857', darker: '#064E3B', sidebar: '#051f18', light: '#ECFDF5', glow: 'rgba(16, 185, 129, 0.15)' },
     orange: { primary: '#F59E0B', dark: '#B45309', darker: '#78350F', sidebar: '#1a110a', light: '#FFFBEB', glow: 'rgba(245, 158, 11, 0.15)' },
     crimson: { primary: '#E11D48', dark: '#9F1239', darker: '#4C0519', sidebar: '#1d0a0f', light: '#FFF1F2', glow: 'rgba(225, 29, 72, 0.15)' },
     dark: { primary: '#334155', dark: '#1E293B', darker: '#0F172A', sidebar: '#0b0f19', light: '#F1F5F9', glow: 'rgba(51, 65, 85, 0.15)' }
   };
+
+  const themeValue = settings.theme || 'indigo';
+  if (themeValue.startsWith('#')) {
+    const hsl = hexToHsl(themeValue);
+    activeTheme = {
+      primary: themeValue,
+      dark: `hsl(${hsl.h}, ${hsl.s}%, ${Math.max(hsl.l - 15, 8)}%)`,
+      darker: `hsl(${hsl.h}, ${hsl.s}%, ${Math.max(hsl.l - 30, 4)}%)`,
+      sidebar: `hsl(${hsl.h}, ${Math.max(hsl.s - 15, 10)}%, 7%)`,
+      light: `hsl(${hsl.h}, ${hsl.s}%, ${Math.min(hsl.l + 45, 96)}%)`,
+      glow: `hsla(${hsl.h}, ${hsl.s}%, ${hsl.l}%, 0.15)`
+    };
+  } else {
+    activeTheme = legacyThemes[themeValue] || legacyThemes.indigo;
+  }
   
-  const activeTheme = themes[settings.theme || 'indigo'] || themes.indigo;
   document.documentElement.style.setProperty('--primary', activeTheme.primary);
   document.documentElement.style.setProperty('--primary-dark', activeTheme.dark);
   document.documentElement.style.setProperty('--primary-darker', activeTheme.darker);
@@ -1403,34 +1685,57 @@ function clearLogoImage() {
   toast("Logo cleared. Save settings to apply.", "info");
 }
 
-function highlightActiveThemeCircle(themeName) {
-  const circles = document.querySelectorAll('#sys-color-palette .color-circle');
-  circles.forEach(circle => {
-    if (circle.getAttribute('data-theme') === themeName) {
-      circle.classList.add('active');
-    } else {
-      circle.classList.remove('active');
-    }
-  });
-}
+// Secondary brand logo upload helper utilities
+let uploadedClientLogoBase64 = "";
 
-function selectThemeCircle(themeName) {
-  const selectEl = document.getElementById('sys-theme');
-  if (selectEl) {
-    selectEl.value = themeName;
+function handleClientLogoUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  if (file.type !== "image/png") {
+    toast("Please select a PNG image file.", "warning");
+    input.value = "";
+    return;
   }
-  highlightActiveThemeCircle(themeName);
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    uploadedClientLogoBase64 = e.target.result;
+    document.getElementById('sys-client-logo-url').value = uploadedClientLogoBase64;
+    document.getElementById('client-logo-file-name').textContent = file.name;
+    document.getElementById('btn-clear-client-logo').style.display = 'inline-flex';
+    toast("Secondary PNG logo loaded. Save settings to apply.", "success");
+  };
+  reader.readAsDataURL(file);
 }
 
-function selectThemeDropdown(themeName) {
-  highlightActiveThemeCircle(themeName);
+function clearClientLogoImage() {
+  uploadedClientLogoBase64 = "";
+  document.getElementById('sys-client-logo-file').value = "";
+  document.getElementById('sys-client-logo-url').value = "";
+  document.getElementById('client-logo-file-name').textContent = "No file chosen";
+  document.getElementById('btn-clear-client-logo').style.display = 'none';
+  toast("Secondary logo cleared. Save settings to apply.", "info");
+}
+function updateThemeColorFromPicker(hexVal) {
+  const btn = document.getElementById('sys-theme-color-btn');
+  if (btn) {
+    btn.style.background = hexVal;
+  }
+  const hexLabel = document.getElementById('sys-theme-color-hex');
+  if (hexLabel) {
+    hexLabel.textContent = hexVal.toUpperCase();
+  }
 }
 
 async function saveBrandingSettings() {
   const companyName = document.getElementById('sys-company-name').value || '';
   const logoUrl = document.getElementById('sys-logo-url').value || '';
+  const clientName = document.getElementById('sys-client-name').value || '';
+  const clientLogoUrl = document.getElementById('sys-client-logo-url').value || '';
   const fontFamily = document.getElementById('sys-font-family').value || 'Plus Jakarta Sans';
-  const theme = document.getElementById('sys-theme').value || 'indigo';
+  const themePicker = document.getElementById('sys-theme-picker');
+  const theme = themePicker ? themePicker.value : '#4F46E5';
   
   try {
     const res = await fetch('/api/system/settings', {
@@ -1439,6 +1744,8 @@ async function saveBrandingSettings() {
       body: JSON.stringify({
         companyName,
         logoUrl,
+        clientName,
+        clientLogoUrl,
         fontFamily,
         theme,
         actor: currentUser.name
@@ -1454,9 +1761,423 @@ async function saveBrandingSettings() {
     toast('Network communication error.', 'danger');
   }
 }
+function handlePurposeSelectChange(selectEl, customContainerId) {
+  const container = document.getElementById(customContainerId);
+  if (selectEl.value === 'More') {
+    container.style.display = 'block';
+    const customInput = container.querySelector('input, textarea');
+    if (customInput) customInput.focus();
+  } else {
+    container.style.display = 'none';
+    const customInput = container.querySelector('input, textarea');
+    if (customInput) customInput.value = '';
+  }
+}
+
+function toggleLoginPasswordVisibility() {
+  const passInput = document.getElementById('login-password');
+  const icon = document.getElementById('pass-show-icon');
+  if (passInput.type === 'password') {
+    passInput.type = 'text';
+    icon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22"/>`;
+  } else {
+    passInput.type = 'password';
+    icon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+  }
+}
+
+let authTempUsername = '';
+
+async function submitCredentials() {
+  const usernameInput = document.getElementById('login-username');
+  const passwordInput = document.getElementById('login-password');
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value;
+
+  if (!username || !password) {
+    return toast('Please enter username and password.', 'warning');
+  }
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    
+    const data = await res.json();
+    if (res.ok && data.success) {
+      authTempUsername = data.username;
+      
+      // Load TOTP Setup data for fallback QR code scan
+      document.getElementById('totp-secret-text').textContent = data.totpSecret;
+      
+      // QuickChart QR generation API
+      const qrUrl = `https://quickchart.io/chart?cht=qr&chs=200x200&chl=${encodeURIComponent(`otpauth://totp/BookMyRoom:${data.username}?secret=${data.totpSecret}&issuer=BookMyRoom`)}`;
+      document.getElementById('totp-qr').src = qrUrl;
+      
+      // Prefill confirmed email address
+      document.getElementById('login-email').value = data.email || '';
+      
+      // Reset Step 2 view state
+      document.getElementById('totp-digits-container').style.display = 'block';
+      document.getElementById('totp-qr-collapse').style.display = 'none';
+      document.getElementById('btn-toggle-qr').textContent = 'Or, use Authenticator App (QR Code)';
+      
+      // Clear TOTP inputs
+      document.querySelectorAll('.totp-digit-input').forEach(input => {
+        input.value = '';
+      });
+
+      // Transition steps
+      document.getElementById('login-step-1').style.display = 'none';
+      document.getElementById('login-step-2').style.display = 'block';
+      
+      // Focus email address field
+      document.getElementById('login-email').focus();
+      
+      toast('Password verified. Please confirm email to receive code.', 'success');
+    } else {
+      toast(data.message || 'Invalid username or password.', 'danger');
+    }
+  } catch (err) {
+    toast('Network error during login.', 'danger');
+  }
+}
+
+function toggleLoginSignUp(event, mode) {
+  if (event) event.preventDefault();
+  const loginStep1 = document.getElementById('login-step-1');
+  const loginSignup = document.getElementById('login-signup');
+  
+  // Clear forms on toggle
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('signup-name').value = '';
+  document.getElementById('signup-username').value = '';
+  document.getElementById('signup-email').value = '';
+  document.getElementById('signup-password').value = '';
+  document.getElementById('signup-password-confirm').value = '';
+  
+  if (mode === 'signup') {
+    loginStep1.style.display = 'none';
+    loginSignup.style.display = 'block';
+    document.getElementById('signup-name').focus();
+  } else {
+    loginSignup.style.display = 'none';
+    loginStep1.style.display = 'block';
+    document.getElementById('login-username').focus();
+  }
+}
+
+async function submitRegister() {
+  const name = document.getElementById('signup-name').value.trim();
+  const username = document.getElementById('signup-username').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+  const passwordConfirm = document.getElementById('signup-password-confirm').value;
+
+  if (!name || !username || !email || !password || !passwordConfirm) {
+    return toast('Please fill in all fields.', 'warning');
+  }
+
+  // Basic email validation
+  if (!email.includes('@') || !email.includes('.')) {
+    return toast('Please enter a valid email address.', 'warning');
+  }
+
+  if (password !== passwordConfirm) {
+    return toast('Passwords do not match.', 'danger');
+  }
+
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, username, email, password })
+    });
+
+    const data = await res.json();
+    if (res.ok && data.success) {
+      toast(data.message, 'success');
+      
+      // Transition back to login prefilled
+      toggleLoginSignUp(null, 'login');
+      document.getElementById('login-username').value = data.username;
+      document.getElementById('login-password').focus();
+    } else {
+      toast(data.message || 'Registration failed.', 'danger');
+    }
+  } catch (err) {
+    toast('Network error during registration.', 'danger');
+  }
+}
+
+function toggleQrCodeCollapse(event) {
+  if (event) event.preventDefault();
+  const qrDiv = document.getElementById('totp-qr-collapse');
+  const toggleLink = document.getElementById('btn-toggle-qr');
+  if (qrDiv.style.display === 'none') {
+    qrDiv.style.display = 'block';
+    toggleLink.textContent = 'Hide Authenticator App QR Code';
+  } else {
+    qrDiv.style.display = 'none';
+    toggleLink.textContent = 'Or, use Authenticator App (QR Code)';
+  }
+}
+
+async function sendTotpEmail() {
+  const emailInput = document.getElementById('login-email');
+  const confirmedEmail = emailInput.value.trim();
+  
+  if (!confirmedEmail) {
+    return toast('Please enter a valid email address.', 'warning');
+  }
+  
+  const sendBtn = document.getElementById('btn-send-totp');
+  const originalText = sendBtn.innerHTML;
+  
+  try {
+    sendBtn.disabled = true;
+    sendBtn.textContent = 'Sending...';
+    
+    const res = await fetch('/api/auth/send-totp-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: authTempUsername, email: confirmedEmail })
+    });
+    
+    const data = await res.json();
+    if (res.ok && data.success) {
+      toast('Verification code sent successfully!', 'success');
+      
+      // Show simulated email preview notification banner
+      showSimulatedEmailToast(data.email, data.code);
+      
+      // Reveal 6-digit inputs container
+      document.getElementById('totp-digits-container').style.display = 'block';
+      
+      // Focus first digit box
+      const digitInputs = document.querySelectorAll('.totp-digit-input');
+      if (digitInputs.length > 0) {
+        digitInputs[0].focus();
+      }
+    } else {
+      toast(data.message || 'Failed to send verification code.', 'danger');
+    }
+  } catch (err) {
+    toast('Network error sending verification code.', 'danger');
+  } finally {
+    sendBtn.disabled = false;
+    sendBtn.innerHTML = originalText;
+  }
+}
+
+function showSimulatedEmailToast(email, code) {
+  const container = document.getElementById('email-notification-wrap');
+  if (!container) return;
+
+  const card = document.createElement('div');
+  card.className = 'email-notification-card';
+  
+  const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  
+  card.innerHTML = `
+    <div class="email-notif-header">
+      <div class="email-notif-title-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span>Outlook Mail</span>
+      </div>
+      <div class="email-notif-time-wrap">
+        <span class="email-notif-time">${timeStr}</span>
+        <button class="email-notif-close" onclick="closeEmailNotif(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="email-notif-content">
+      <div class="email-notif-sender">From: <strong>security@bookmyroom.com</strong></div>
+      <div class="email-notif-subject">🔐 BookMyRoom Verification Code</div>
+      <div class="email-notif-body">
+        Hello user,<br>
+        Your dynamic two-factor verification code is:
+        <div style="text-align: center; margin: 8px 0 4px 0;">
+          <span class="email-notif-otp-val">${code}</span>
+        </div>
+        <span style="font-size:10px; color:var(--slate-400);">This code expires in 30 seconds. Double-click to select and copy.</span>
+      </div>
+    </div>
+  `;
+
+  container.appendChild(card);
+
+  // Auto dismiss after 15 seconds
+  setTimeout(() => {
+    if (card.parentNode) {
+      card.classList.add('slide-out');
+      setTimeout(() => {
+        if (card.parentNode) {
+          container.removeChild(card);
+        }
+      }, 350);
+    }
+  }, 15000);
+}
+
+// Global window helper to close simulated email card
+window.closeEmailNotif = function(btn) {
+  const card = btn.closest('.email-notification-card');
+  if (card) {
+    card.classList.add('slide-out');
+    setTimeout(() => {
+      if (card.parentNode) {
+        card.parentNode.removeChild(card);
+      }
+    }, 350);
+  }
+};
+
+function handleTotpInput(input, event, index) {
+  const value = input.value;
+  const digits = document.querySelectorAll('.totp-digit-input');
+
+  // Allow only digits
+  if (value && !/^\d$/.test(value)) {
+    input.value = '';
+    return;
+  }
+
+  if (event.key === 'Backspace') {
+    if (index > 0) {
+      digits[index - 1].focus();
+    }
+  } else if (value.length === 1) {
+    if (index < 5) {
+      digits[index + 1].focus();
+    } else if (index === 5) {
+      submitTotpCode();
+    }
+  }
+}
+
+async function submitTotpCode() {
+  const digits = document.querySelectorAll('.totp-digit-input');
+  let code = '';
+  digits.forEach(input => {
+    code += input.value;
+  });
+
+  if (code.length < 6) {
+    return toast('Please enter a 6-digit verification code.', 'warning');
+  }
+
+  try {
+    const res = await fetch('/api/auth/verify-totp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: authTempUsername, code })
+    });
+
+    const data = await res.json();
+    if (res.ok && data.success) {
+      toast('Verification successful!', 'success');
+      localStorage.setItem('currentUser', JSON.stringify(data.user));
+      
+      // Hide login overlay
+      document.getElementById('login-overlay').style.display = 'none';
+
+      // Remove simulated email toasts if any are visible
+      const emailWrap = document.getElementById('email-notification-wrap');
+      if (emailWrap) emailWrap.innerHTML = '';
+
+      // Load states
+      fetchState();
+    } else {
+      // Flash inputs red
+      digits.forEach(input => {
+        input.style.borderColor = 'var(--danger)';
+        input.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.2)';
+        input.value = '';
+      });
+      setTimeout(() => {
+        digits.forEach(input => {
+          input.style.borderColor = '';
+          input.style.boxShadow = '';
+        });
+        digits[0].focus();
+      }, 800);
+      
+      toast(data.message || 'Invalid verification code.', 'danger');
+    }
+  } catch (err) {
+    toast('Network error verifying code.', 'danger');
+  }
+}
+
+function goBackToCredentials(event) {
+  if (event) event.preventDefault();
+  document.getElementById('login-step-2').style.display = 'none';
+  document.getElementById('login-step-1').style.display = 'block';
+  
+  // Clear inputs and containers
+  document.querySelectorAll('.totp-digit-input').forEach(input => {
+    input.value = '';
+  });
+  document.getElementById('totp-digits-container').style.display = 'block';
+  document.getElementById('totp-qr-collapse').style.display = 'none';
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-password').focus();
+  
+  const signupContainer = document.getElementById('login-signup');
+  if (signupContainer) signupContainer.style.display = 'none';
+  
+  // Remove simulated email notifications
+  const emailWrap = document.getElementById('email-notification-wrap');
+  if (emailWrap) emailWrap.innerHTML = '';
+}
+
+function logout() {
+  localStorage.removeItem('currentUser');
+  currentUser = null;
+  
+  // Clear fields and views
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-email').value = '';
+  
+  document.querySelectorAll('.totp-digit-input').forEach(input => {
+    input.value = '';
+  });
+  
+  const digitsContainer = document.getElementById('totp-digits-container');
+  if (digitsContainer) digitsContainer.style.display = 'block';
+  
+  const qrCollapse = document.getElementById('totp-qr-collapse');
+  if (qrCollapse) qrCollapse.style.display = 'none';
+  
+  const step2 = document.getElementById('login-step-2');
+  if (step2) step2.style.display = 'none';
+  const step1 = document.getElementById('login-step-1');
+  if (step1) step1.style.display = 'block';
+  
+  const signupContainer = document.getElementById('login-signup');
+  if (signupContainer) signupContainer.style.display = 'none';
+
+  // Remove simulated email notifications
+  const emailWrap = document.getElementById('email-notification-wrap');
+  if (emailWrap) emailWrap.innerHTML = '';
+
+  // Show overlay
+  const overlay = document.getElementById('login-overlay');
+  if (overlay) overlay.style.display = 'flex';
+  const userField = document.getElementById('login-username');
+  if (userField) userField.focus();
+  
+  toast('Logged out successfully.', 'info');
+  fetchState();
+}
 
 // ======================== INITIALIZE ========================
-
 document.addEventListener('DOMContentLoaded', () => {
   fetchState();
   // Poll state every 4 seconds for real-time multiplayer coordination feel
