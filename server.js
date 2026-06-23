@@ -5,12 +5,59 @@ const http = require('http');
 const crypto = require('crypto');
 const { execSync } = require('child_process');
 const express = require('express');
+const { Pool } = require('pg');
 
 const PORT_HTTP = process.env.PORT || 8000;
 const PORT_HTTPS = 8443;
 const DB_FILE = path.join(__dirname, 'db.json');
 const CERT_KEY = path.join(__dirname, 'key.pem');
+
 const CERT_CRT = path.join(__dirname, 'cert.pem');
+
+// PostgreSQL Pool config (for Supabase/Neon/etc. cloud database)
+let pool = null;
+if (process.env.DATABASE_URL) {
+  console.log('PostgreSQL database URL detected. Initializing database pool...');
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  });
+}
+
+// Initialize tables in SQL database
+async function initSqlDb() {
+  if (!pool) return;
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS app_state (
+        id VARCHAR(50) PRIMARY KEY,
+        data JSONB NOT NULL
+      );
+    `);
+    
+    const res = await pool.query("SELECT 1 FROM app_state WHERE id = 'current_state'");
+    if (res.rowCount === 0) {
+      console.log('Initializing database state from db.json...');
+      const localData = fs.readFileSync(DB_FILE, 'utf8');
+      const initialDb = JSON.parse(localData);
+      await pool.query(
+        "INSERT INTO app_state (id, data) VALUES ('current_state', $1)",
+        [JSON.stringify(initialDb)]
+      );
+      console.log('Database state initialized in SQL database.');
+    }
+  } catch (err) {
+    console.error('Error initializing SQL database, falling back to local files:', err.message);
+    pool = null; // Fall back to local file operations
+  }
+}
+
+if (pool) {
+  initSqlDb();
+}
+
 
 // 1. Auto-generate SSL Certificate if not present (same as parent server)
 if (!process.env.PORT && (!fs.existsSync(CERT_KEY) || !fs.existsSync(CERT_CRT))) {
@@ -92,10 +139,22 @@ function hasConflict(bookings, newBk, excludeId = null) {
 }
 
 // Helper to read database
-function readDb() {
+// Helper to read database
+async function readDb() {
   try {
-    const data = fs.readFileSync(DB_FILE, 'utf8');
-    const db = JSON.parse(data);
+    let db;
+    if (pool) {
+      const res = await pool.query("SELECT data FROM app_state WHERE id = 'current_state'");
+      if (res.rowCount > 0) {
+        db = res.rows[0].data;
+      } else {
+        const data = fs.readFileSync(DB_FILE, 'utf8');
+        db = JSON.parse(data);
+      }
+    } else {
+      const data = fs.readFileSync(DB_FILE, 'utf8');
+      db = JSON.parse(data);
+    }
     
     // Check auto-approvals for bookings waiting for approval
     // starting 30 mins before scheduled time if room is available
@@ -129,7 +188,7 @@ function readDb() {
     });
 
     if (dbChanged) {
-      writeDb(db);
+      await writeDb(db);
     }
     
     return db;
@@ -140,9 +199,16 @@ function readDb() {
 }
 
 // Helper to write database
-function writeDb(data) {
+async function writeDb(data) {
   try {
-    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf8');
+    if (pool) {
+      await pool.query(
+        "INSERT INTO app_state (id, data) VALUES ('current_state', $1) ON CONFLICT (id) DO UPDATE SET data = $1",
+        [JSON.stringify(data)]
+      );
+    } else {
+      fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf8');
+    }
   } catch (err) {
     console.error('Error writing DB', err);
   }
@@ -162,13 +228,13 @@ function addAuditLog(db, action, user, details) {
 
 // REST API Endpoints
 // 1. Get entire state
-app.get('/api/state', (req, res) => {
-  res.json(readDb());
+app.get('/api/state', async (req, res) => {
+  res.json(await readDb());
 });
 
 // 2. Booking endpoints
-app.post('/api/bookings', (req, res) => {
-  const db = readDb();
+app.post('/api/bookings', async (req, res) => {
+  const db = await readDb();
   const { empId, room, date, start, duration, purpose, status } = req.body;
 
   // Collision validation check
@@ -199,12 +265,12 @@ app.post('/api/bookings', (req, res) => {
   const empName = emp ? emp.name : 'Unknown';
   addAuditLog(db, 'BOOKING_CREATE', empName, `Requested reservation for ${room} on ${date} at ${start}`);
   
-  writeDb(db);
+  await writeDb(db);
   res.status(201).json(newBooking);
 });
 
-app.put('/api/bookings/:id', (req, res) => {
-  const db = readDb();
+app.put('/api/bookings/:id', async (req, res) => {
+  const db = await readDb();
   const bookingId = parseInt(req.params.id);
   const bookingIndex = db.bookings.findIndex(b => b.id === bookingId);
   
@@ -229,12 +295,12 @@ app.put('/api/bookings/:id', (req, res) => {
   const actor = req.body.actor || 'System';
   addAuditLog(db, 'BOOKING_UPDATE', actor, `Booking ID ${bookingId} updated status to ${updatedBooking.status}`);
   
-  writeDb(db);
+  await writeDb(db);
   res.json(updatedBooking);
 });
 
-app.delete('/api/bookings/:id', (req, res) => {
-  const db = readDb();
+app.delete('/api/bookings/:id', async (req, res) => {
+  const db = await readDb();
   const bookingId = parseInt(req.params.id);
   const bookingIndex = db.bookings.findIndex(b => b.id === bookingId);
   
@@ -248,13 +314,13 @@ app.delete('/api/bookings/:id', (req, res) => {
   const actor = req.query.actor || 'System';
   addAuditLog(db, 'BOOKING_DELETE', actor, `Cancelled reservation for ${deletedBooking.room} on ${deletedBooking.date}`);
   
-  writeDb(db);
+  await writeDb(db);
   res.json({ success: true });
 });
 
 // 3. Room endpoints (Editable by Admin)
-app.post('/api/rooms', (req, res) => {
-  const db = readDb();
+app.post('/api/rooms', async (req, res) => {
+  const db = await readDb();
   const { name, capacity, lockStatus } = req.body;
   
   const newRoom = {
@@ -269,12 +335,12 @@ app.post('/api/rooms', (req, res) => {
   const actor = req.body.actor || 'Admin';
   addAuditLog(db, 'ROOM_CREATE', actor, `Added new room ${name} with capacity ${capacity}`);
   
-  writeDb(db);
+  await writeDb(db);
   res.status(201).json(newRoom);
 });
 
-app.put('/api/rooms/:id', (req, res) => {
-  const db = readDb();
+app.put('/api/rooms/:id', async (req, res) => {
+  const db = await readDb();
   const roomId = req.params.id;
   const roomIndex = db.rooms.findIndex(r => r.id === roomId);
   
@@ -290,12 +356,12 @@ app.put('/api/rooms/:id', (req, res) => {
   const actor = req.body.actor || 'Admin';
   addAuditLog(db, 'ROOM_UPDATE', actor, `Updated room ${updatedRoom.name} details (Lock status: ${updatedRoom.lockStatus})`);
   
-  writeDb(db);
+  await writeDb(db);
   res.json(updatedRoom);
 });
 
-app.delete('/api/rooms/:id', (req, res) => {
-  const db = readDb();
+app.delete('/api/rooms/:id', async (req, res) => {
+  const db = await readDb();
   const roomId = req.params.id;
   const roomIndex = db.rooms.findIndex(r => r.id === roomId);
   
@@ -309,13 +375,13 @@ app.delete('/api/rooms/:id', (req, res) => {
   const actor = req.query.actor || 'Admin';
   addAuditLog(db, 'ROOM_DELETE', actor, `Deleted room ${deletedRoom.name}`);
   
-  writeDb(db);
+  await writeDb(db);
   res.json({ success: true });
 });
 
 // 4. Employee endpoints (Editable by Admin Only)
-app.post('/api/employees', (req, res) => {
-  const db = readDb();
+app.post('/api/employees', async (req, res) => {
+  const db = await readDb();
   const { name, tag, dept, initials, color, textColor, role, actor } = req.body;
   
   // Authorization check: Only Admin can add employees through console
@@ -339,12 +405,12 @@ app.post('/api/employees', (req, res) => {
   
   addAuditLog(db, 'EMPLOYEE_CREATE', actor || 'Admin', `Registered new employee ${name} with RFID tag ${tag} (${role})`);
   
-  writeDb(db);
+  await writeDb(db);
   res.status(201).json(newEmp);
 });
 
-app.put('/api/employees/:id', (req, res) => {
-  const db = readDb();
+app.put('/api/employees/:id', async (req, res) => {
+  const db = await readDb();
   const empId = req.params.id;
   const empIndex = db.employees.findIndex(e => e.id === empId);
   
@@ -363,12 +429,12 @@ app.put('/api/employees/:id', (req, res) => {
   
   addAuditLog(db, 'EMPLOYEE_UPDATE', actor || 'Admin', `Updated employee ${updatedEmp.name} (Role: ${updatedEmp.role}, Tag: ${updatedEmp.tag})`);
   
-  writeDb(db);
+  await writeDb(db);
   res.json(updatedEmp);
 });
 
-app.delete('/api/employees/:id', (req, res) => {
-  const db = readDb();
+app.delete('/api/employees/:id', async (req, res) => {
+  const db = await readDb();
   const empId = req.params.id;
   const empIndex = db.employees.findIndex(e => e.id === empId);
   
@@ -387,13 +453,13 @@ app.delete('/api/employees/:id', (req, res) => {
   
   addAuditLog(db, 'EMPLOYEE_DELETE', actor || 'Admin', `Deregistered employee ${deletedEmp.name}`);
   
-  writeDb(db);
+  await writeDb(db);
   res.json({ success: true });
 });
 
 // 5. RFID Scan/Tap endpoint (Simulated access scanner logic)
-app.post('/api/rfid/tap', (req, res) => {
-  const db = readDb();
+app.post('/api/rfid/tap', async (req, res) => {
+  const db = await readDb();
   const { tag, room } = req.body;
   const now = new Date();
   const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
@@ -409,7 +475,7 @@ app.post('/api/rfid/tap', (req, res) => {
     };
     db.rfidLog.unshift(newLog);
     addAuditLog(db, 'ACCESS_DENIED', 'Unknown RFID', `Card tag ${tag} scanned at ${room} - Denied: Card not registered.`);
-    writeDb(db);
+    await writeDb(db);
     return res.status(403).json({ success: false, message: errorMsg, code: 'UNREGISTERED_CARD' });
   }
   
@@ -422,7 +488,7 @@ app.post('/api/rfid/tap', (req, res) => {
     };
     db.rfidLog.unshift(newLog);
     addAuditLog(db, 'ACCESS_DENIED', emp.name, `Card scanned at ${room} - Denied: Global lockdown active.`);
-    writeDb(db);
+    await writeDb(db);
     return res.status(403).json({ success: false, message: errorMsg, code: 'GLOBAL_LOCKDOWN' });
   }
   
@@ -440,7 +506,7 @@ app.post('/api/rfid/tap', (req, res) => {
     };
     db.rfidLog.unshift(newLog);
     addAuditLog(db, 'ACCESS_DENIED', emp.name, `Card scanned at ${room} - Denied: Room is manually locked.`);
-    writeDb(db);
+    await writeDb(db);
     return res.status(403).json({ success: false, message: errorMsg, code: 'ROOM_LOCKED' });
   }
   
@@ -459,7 +525,7 @@ app.post('/api/rfid/tap', (req, res) => {
       }
       
       addAuditLog(db, 'ACCESS_GRANTED', emp.name, `Unlocked ${room} via ${emp.role === 'admin' ? 'Admin Override' : 'Force Unlocked Mode'}`);
-      writeDb(db);
+      await writeDb(db);
       return res.json({ success: true, event: 'check-in', message: `${emp.name} checked in (Override access granted).` });
     } else {
       const durationMs = now.getTime() - db.rfidState[tag].since;
@@ -476,7 +542,7 @@ app.post('/api/rfid/tap', (req, res) => {
       }
       
       addAuditLog(db, 'ACCESS_CLOSED', emp.name, `Locked ${room} session closed. Duration: ${durStr}`);
-      writeDb(db);
+      await writeDb(db);
       return res.json({ success: true, event: 'check-out', message: `${emp.name} checked out.` });
     }
   }
@@ -491,7 +557,7 @@ app.post('/api/rfid/tap', (req, res) => {
     const errorMsg = `Denied access at ${room} for ${emp.name}. Reason: No active booking found.`;
     db.rfidLog.unshift({ id: db.rfidLog.length > 0 ? Math.max(...db.rfidLog.map(l => l.id)) + 1 : 1, tag, name: emp.name, room, event: 'access-denied', time: timeStr, date: dateStr, duration: 'No booking' });
     addAuditLog(db, 'ACCESS_DENIED', emp.name, `Card scanned at ${room} - Denied: No active booking today.`);
-    writeDb(db);
+    await writeDb(db);
     return res.status(403).json({ success: false, message: errorMsg, code: 'NO_BOOKING' });
   }
   
@@ -505,7 +571,7 @@ app.post('/api/rfid/tap', (req, res) => {
     }
     
     addAuditLog(db, 'ACCESS_GRANTED', emp.name, `RFID scan checked in to ${room} for booking.`);
-    writeDb(db);
+    await writeDb(db);
     res.json({ success: true, event: 'check-in', message: `${emp.name} checked in.` });
   } else {
     // Check-out
@@ -523,15 +589,15 @@ app.post('/api/rfid/tap', (req, res) => {
     }
     
     addAuditLog(db, 'ACCESS_CLOSED', emp.name, `RFID scan checked out of ${room}. Duration: ${durStr}`);
-    writeDb(db);
+    await writeDb(db);
     res.json({ success: true, event: 'check-out', message: `${emp.name} checked out.` });
   }
 });
 
 // 6. Settings endpoint
-app.post('/api/system/settings', (req, res) => {
+app.post('/api/system/settings', async (req, res) => {
   console.log('API settings request body:', req.body);
-  const db = readDb();
+  const db = await readDb();
   const { globalLockdown, gracePeriod, companyName, logoUrl, clientName, clientLogoUrl, fontFamily, theme, actor } = req.body;
   
   if (globalLockdown !== undefined) {
@@ -569,7 +635,7 @@ app.post('/api/system/settings', (req, res) => {
     addAuditLog(db, 'BRANDING_CHANGE', actor || 'Admin', `System appearance theme set to: ${theme}`);
   }
   
-  writeDb(db);
+  await writeDb(db);
   res.json({ success: true, settings: db.systemSettings });
 });
 
@@ -665,8 +731,8 @@ function getTOTP(secret) {
 }
 
 // Authentication endpoints
-app.post('/api/auth/register', (req, res) => {
-  const db = readDb();
+app.post('/api/auth/register', async (req, res) => {
+  const db = await readDb();
   const { name, username, email, password } = req.body;
 
   if (!name || !username || !email || !password) {
@@ -733,7 +799,7 @@ app.post('/api/auth/register', (req, res) => {
   db.employees.push(newEmployee);
   
   addAuditLog(db, 'USER_REGISTER', name, `Self-registered new employee account: ${username} (RFID: ${tag})`);
-  writeDb(db);
+  await writeDb(db);
 
   res.status(201).json({
     success: true,
@@ -742,8 +808,8 @@ app.post('/api/auth/register', (req, res) => {
   });
 });
 
-app.post('/api/auth/login', (req, res) => {
-  const db = readDb();
+app.post('/api/auth/login', async (req, res) => {
+  const db = await readDb();
   const { username, password } = req.body;
   
   if (!username || !password) {
@@ -766,8 +832,8 @@ app.post('/api/auth/login', (req, res) => {
   });
 });
 
-app.post('/api/auth/send-totp-email', (req, res) => {
-  const db = readDb();
+app.post('/api/auth/send-totp-email', async (req, res) => {
+  const db = await readDb();
   const { username, email } = req.body;
 
   if (!username || !email) {
@@ -802,8 +868,8 @@ app.post('/api/auth/send-totp-email', (req, res) => {
   });
 });
 
-app.post('/api/auth/verify-totp', (req, res) => {
-  const db = readDb();
+app.post('/api/auth/verify-totp', async (req, res) => {
+  const db = await readDb();
   const { username, code } = req.body;
 
   if (!username || !code) {
@@ -823,7 +889,7 @@ app.post('/api/auth/verify-totp', (req, res) => {
   }
 
   addAuditLog(db, 'USER_LOGIN', employee.name, `${employee.name} (${employee.role}) logged in successfully via 2FA.`);
-  writeDb(db);
+  await writeDb(db);
 
   const sessionUser = {
     id: employee.id,
