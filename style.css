@@ -93,10 +93,10 @@ body {
 }
 
 .logo-icon {
-  width: 46px;
-  height: 46px;
+  width: 76px;
+  height: 76px;
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  border-radius: 12px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,8 +104,8 @@ body {
 }
 
 .logo-icon svg {
-  width: 26px;
-  height: 26px;
+  width: 44px;
+  height: 44px;
 }
 
 .logo-text {
@@ -2039,9 +2039,9 @@ textarea.form-input {
 }
 
 .login-logo-mark {
-  width: 68px;
-  height: 68px;
-  border-radius: 16px;
+  width: 92px;
+  height: 92px;
+  border-radius: 20px;
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   display: flex;
   align-items: center;
@@ -2051,8 +2051,8 @@ textarea.form-input {
 }
 
 .login-logo-mark svg {
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   stroke: white;
 }
 
