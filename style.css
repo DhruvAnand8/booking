@@ -93,10 +93,10 @@ body {
 }
 
 .logo-icon {
-  width: 76px;
-  height: 76px;
+  width: 46px;
+  height: 46px;
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  border-radius: 16px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,8 +104,8 @@ body {
 }
 
 .logo-icon svg {
-  width: 44px;
-  height: 44px;
+  width: 26px;
+  height: 26px;
 }
 
 .logo-text {
@@ -1824,6 +1824,8 @@ textarea.form-input {
 
 /* CUSTOM LOGO CLASS */
 .logo-icon.has-image {
+  width: 96px;
+  height: 96px;
   background: transparent;
   box-shadow: none;
 }
@@ -1840,8 +1842,8 @@ textarea.form-input {
 }
 
 .footer-logo-wrap {
-  width: 64px;
-  height: 64px;
+  width: 96px;
+  height: 96px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2039,9 +2041,9 @@ textarea.form-input {
 }
 
 .login-logo-mark {
-  width: 92px;
-  height: 92px;
-  border-radius: 20px;
+  width: 68px;
+  height: 68px;
+  border-radius: 16px;
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   display: flex;
   align-items: center;
@@ -2051,8 +2053,8 @@ textarea.form-input {
 }
 
 .login-logo-mark svg {
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   stroke: white;
 }
 
