@@ -93,10 +93,10 @@ body {
 }
 
 .logo-icon {
-  width: 38px;
-  height: 38px;
+  width: 46px;
+  height: 46px;
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,8 +104,8 @@ body {
 }
 
 .logo-icon svg {
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
 }
 
 .logo-text {
@@ -1840,8 +1840,8 @@ textarea.form-input {
 }
 
 .footer-logo-wrap {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2039,20 +2039,20 @@ textarea.form-input {
 }
 
 .login-logo-mark {
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
+  width: 68px;
+  height: 68px;
+  border-radius: 16px;
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 14px auto;
-  box-shadow: 0 8px 20px var(--primary-glow);
+  margin: 0 auto 18px auto;
+  box-shadow: 0 8px 24px var(--primary-glow);
 }
 
 .login-logo-mark svg {
-  width: 22px;
-  height: 22px;
+  width: 34px;
+  height: 34px;
   stroke: white;
 }
 
