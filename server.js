@@ -760,7 +760,7 @@ app.post('/api/auth/login', (req, res) => {
     success: true,
     step: 2,
     username: employee.username,
-    email: employee.email || `${employee.username}@bookmyroom.com`,
+    email: employee.email || `${employee.username}@e-conference.com`,
     totpSecret: employee.totpSecret,
     message: 'Password verified. Please check or enter your email to receive code.'
   });
@@ -785,9 +785,9 @@ app.post('/api/auth/send-totp-email', (req, res) => {
   console.log('\n==================================================');
   console.log('📧 SIMULATED EMAIL TRANSMISSION');
   console.log(`Date: ${new Date().toUTCString()}`);
-  console.log(`From: security@bookmyroom.com`);
+  console.log(`From: security@e-conference.com`);
   console.log(`To: ${email}`);
-  console.log(`Subject: 🔐 BookMyRoom Verification Code`);
+  console.log(`Subject: 🔐 E-Conference Verification Code`);
   console.log('--------------------------------------------------');
   console.log(`Hello ${employee.name},\n`);
   console.log(`Your two-factor verification code is: ${code}\n`);

@@ -1049,7 +1049,7 @@ function handleDashboardCellClick(roomName, time, dateStr = '2026-06-23') {
     
     const emailField = document.getElementById('summary-email');
     if (emailField) {
-      emailField.textContent = emp.email || (emp.username ? `${emp.username}@bookmyroom.com` : 'no-email@bookmyroom.com');
+      emailField.textContent = emp.email || (emp.username ? `${emp.username}@e-conference.com` : 'no-email@e-conference.com');
     }
     
     const statusContainer = document.getElementById('summary-status');
@@ -1570,40 +1570,28 @@ function applyBranding(settings) {
   // Apply font family
   document.body.style.fontFamily = `"${settings.fontFamily || 'Plus Jakarta Sans'}", system-ui, -apple-system, sans-serif`;
   
-  // Apply logo text (top header brand identity is permanently "BookMyRoom")
+  // Apply logo text (top header brand identity - defaults to "E-Conference")
   const logoTextEl = document.querySelector('.logo-text');
-  if (logoTextEl) logoTextEl.textContent = 'BookMyRoom';
+  if (logoTextEl) {
+    logoTextEl.textContent = (settings.companyName && settings.companyName.trim() !== '') ? settings.companyName : 'E-Conference';
+  }
   
-  // Apply logo image in top header - always keep the default premium vector mark for BookMyRoom
+  // Apply logo image in top header - uses custom logo if provided, otherwise default SVG vector mark
   const logoIconEl = document.querySelector('.logo-icon');
   if (logoIconEl) {
-    logoIconEl.classList.remove('has-image');
-    logoIconEl.innerHTML = `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" stroke="white" stroke-width="2" fill="none"/><path d="M9 9h6M9 13h6M9 17h4" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>`;
+    if (settings.logoUrl && settings.logoUrl.trim() !== '') {
+      logoIconEl.classList.add('has-image');
+      logoIconEl.innerHTML = `<img src="${settings.logoUrl.trim()}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">`;
+    } else {
+      logoIconEl.classList.remove('has-image');
+      logoIconEl.innerHTML = `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" stroke="white" stroke-width="2" fill="none"/><path d="M9 9h6M9 13h6M9 17h4" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>`;
+    }
   }
 
-  // Apply custom company logo and custom name just beneath Admin Console
+  // Hide duplicate footer logo element beneath admin console (as it is now integrated at the top)
   const footerLogoEl = document.getElementById('sidebar-footer-logo');
-  const footerLogoImgEl = document.getElementById('sidebar-footer-logo-img');
-  const footerLogoTextEl = document.getElementById('sidebar-footer-logo-text');
-  if (footerLogoEl && footerLogoImgEl && footerLogoTextEl) {
-    const hasCustomName = settings.companyName && settings.companyName.trim() !== '' && settings.companyName !== 'BookMyRoom';
-    const hasCustomLogo = settings.logoUrl && settings.logoUrl.trim() !== '';
-    
-    if (hasCustomName || hasCustomLogo) {
-      if (hasCustomLogo) {
-        footerLogoImgEl.src = settings.logoUrl.trim();
-        footerLogoImgEl.style.display = 'block';
-      } else {
-        footerLogoImgEl.src = '';
-        footerLogoImgEl.style.display = 'none';
-      }
-      footerLogoTextEl.textContent = hasCustomName ? settings.companyName : '';
-      footerLogoEl.style.display = 'flex';
-    } else {
-      footerLogoEl.style.display = 'none';
-      footerLogoImgEl.src = '';
-      footerLogoTextEl.textContent = '';
-    }
+  if (footerLogoEl) {
+    footerLogoEl.style.display = 'none';
   }
 
   // Apply secondary custom company logo and name above employee details
@@ -1825,7 +1813,7 @@ async function submitCredentials() {
       document.getElementById('totp-secret-text').textContent = data.totpSecret;
       
       // QuickChart QR generation API
-      const qrUrl = `https://quickchart.io/chart?cht=qr&chs=200x200&chl=${encodeURIComponent(`otpauth://totp/BookMyRoom:${data.username}?secret=${data.totpSecret}&issuer=BookMyRoom`)}`;
+      const qrUrl = `https://quickchart.io/chart?cht=qr&chs=200x200&chl=${encodeURIComponent(`otpauth://totp/E-Conference:${data.username}?secret=${data.totpSecret}&issuer=E-Conference`)}`;
       document.getElementById('totp-qr').src = qrUrl;
       
       // Prefill confirmed email address
@@ -2008,8 +1996,8 @@ function showSimulatedEmailToast(email, code) {
       </div>
     </div>
     <div class="email-notif-content">
-      <div class="email-notif-sender">From: <strong>security@bookmyroom.com</strong></div>
-      <div class="email-notif-subject">🔐 BookMyRoom Verification Code</div>
+      <div class="email-notif-sender">From: <strong>security@e-conference.com</strong></div>
+      <div class="email-notif-subject">🔐 E-Conference Verification Code</div>
       <div class="email-notif-body">
         Hello user,<br>
         Your dynamic two-factor verification code is:
