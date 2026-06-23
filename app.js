@@ -866,15 +866,22 @@ function renderAdminBookings() {
 
 // 4. Settings & Logs Tab
 function renderAdminSettings() {
-  document.getElementById('sys-grace-period').value = state.systemSettings.gracePeriod;
+  const graceEl = document.getElementById('sys-grace-period');
+  if (graceEl && document.activeElement !== graceEl) {
+    graceEl.value = state.systemSettings.gracePeriod;
+  }
   
   // Load branding values
-  if (state.systemSettings.companyName !== undefined) {
-    document.getElementById('sys-company-name').value = state.systemSettings.companyName;
+  const companyNameEl = document.getElementById('sys-company-name');
+  if (companyNameEl && state.systemSettings.companyName !== undefined && document.activeElement !== companyNameEl) {
+    companyNameEl.value = state.systemSettings.companyName;
   }
+  const logoUrlEl = document.getElementById('sys-logo-url');
+  if (logoUrlEl && state.systemSettings.logoUrl !== undefined && document.activeElement !== logoUrlEl) {
+    logoUrlEl.value = state.systemSettings.logoUrl;
+  }
+  
   if (state.systemSettings.logoUrl !== undefined) {
-    document.getElementById('sys-logo-url').value = state.systemSettings.logoUrl;
-    
     // Configure file uploader name
     const isBase64 = state.systemSettings.logoUrl.startsWith('data:image/png;base64,');
     if (isBase64) {
@@ -890,12 +897,16 @@ function renderAdminSettings() {
   }
 
   // Load secondary branding values
-  if (state.systemSettings.clientName !== undefined) {
-    document.getElementById('sys-client-name').value = state.systemSettings.clientName;
+  const clientNameEl = document.getElementById('sys-client-name');
+  if (clientNameEl && state.systemSettings.clientName !== undefined && document.activeElement !== clientNameEl) {
+    clientNameEl.value = state.systemSettings.clientName;
   }
+  const clientLogoUrlEl = document.getElementById('sys-client-logo-url');
+  if (clientLogoUrlEl && state.systemSettings.clientLogoUrl !== undefined && document.activeElement !== clientLogoUrlEl) {
+    clientLogoUrlEl.value = state.systemSettings.clientLogoUrl;
+  }
+  
   if (state.systemSettings.clientLogoUrl !== undefined) {
-    document.getElementById('sys-client-logo-url').value = state.systemSettings.clientLogoUrl;
-    
     // Configure file uploader name
     const isBase64 = state.systemSettings.clientLogoUrl.startsWith('data:image/png;base64,');
     if (isBase64) {
@@ -910,8 +921,9 @@ function renderAdminSettings() {
     }
   }
 
-  if (state.systemSettings.fontFamily !== undefined) {
-    document.getElementById('sys-font-family').value = state.systemSettings.fontFamily;
+  const fontFamilyEl = document.getElementById('sys-font-family');
+  if (fontFamilyEl && state.systemSettings.fontFamily !== undefined && document.activeElement !== fontFamilyEl) {
+    fontFamilyEl.value = state.systemSettings.fontFamily;
   }
   if (state.systemSettings.theme !== undefined) {
     const themeVal = state.systemSettings.theme;
