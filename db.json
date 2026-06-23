@@ -251,8 +251,8 @@
       "duration": "1 hour",
       "purpose": "Client presentation",
       "status": "approved",
-      "checkin": null,
-      "checkout": null
+      "checkin": "16:10",
+      "checkout": "16:10"
     },
     {
       "id": 2,
@@ -335,7 +335,7 @@
       "duration": "1 hour",
       "purpose": "Investor call",
       "status": "approved",
-      "checkin": null,
+      "checkin": "16:10",
       "checkout": null
     },
     {
@@ -352,6 +352,186 @@
     }
   ],
   "rfidLog": [
+    {
+      "id": 24,
+      "tag": "RF-7E5F",
+      "name": "Rahul Sharma",
+      "room": "Floor 1 CR",
+      "event": "check-in",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": null
+    },
+    {
+      "id": 23,
+      "tag": "RF-9C3D",
+      "name": "Priya Mehta",
+      "room": "Floor 1 CR",
+      "event": "access-denied",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": "No booking"
+    },
+    {
+      "id": 22,
+      "tag": "4231",
+      "name": "Divyam",
+      "room": "Floor 1 CR",
+      "event": "access-denied",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": "No booking"
+    },
+    {
+      "id": 21,
+      "tag": "RF-E007",
+      "name": "Authorized Test User",
+      "room": "Floor 1 CR",
+      "event": "access-denied",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": "No booking"
+    },
+    {
+      "id": 20,
+      "tag": "RF-F810",
+      "name": "dhruv",
+      "room": "Floor 1 CR",
+      "event": "access-denied",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": "No booking"
+    },
+    {
+      "id": 19,
+      "tag": "RF-89EC",
+      "name": "Test Account",
+      "room": "Floor 1 CR",
+      "event": "access-denied",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": "No booking"
+    },
+    {
+      "id": 18,
+      "tag": "RF-6I1J",
+      "name": "Vikram Singh",
+      "room": "Floor 1 CR",
+      "event": "check-in",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": null
+    },
+    {
+      "id": 17,
+      "tag": "RF-2G8H",
+      "name": "Neha Gupta",
+      "room": "Floor 1 CR",
+      "event": "access-denied",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": "No booking"
+    },
+    {
+      "id": 16,
+      "tag": "RF-7E5F",
+      "name": "Rahul Sharma",
+      "room": "Floor 1 CR",
+      "event": "check-out",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": "0 min"
+    },
+    {
+      "id": 15,
+      "tag": "RF-4A2B",
+      "name": "Arjun Kapoor",
+      "room": "Floor 1 CR",
+      "event": "access-denied",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": "No booking"
+    },
+    {
+      "id": 14,
+      "tag": "RF-9C3D",
+      "name": "Priya Mehta",
+      "room": "Floor 1 CR",
+      "event": "access-denied",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": "No booking"
+    },
+    {
+      "id": 13,
+      "tag": "RF-9C3D",
+      "name": "Priya Mehta",
+      "room": "Floor 1 CR",
+      "event": "access-denied",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": "No booking"
+    },
+    {
+      "id": 12,
+      "tag": "RF-7E5F",
+      "name": "Rahul Sharma",
+      "room": "Floor 1 CR",
+      "event": "check-in",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": null
+    },
+    {
+      "id": 11,
+      "tag": "RF-9C3D",
+      "name": "Priya Mehta",
+      "room": "Floor 1 CR",
+      "event": "access-denied",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": "No booking"
+    },
+    {
+      "id": 10,
+      "tag": "RF-9C3D",
+      "name": "Priya Mehta",
+      "room": "Floor 1 CR",
+      "event": "access-denied",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": "No booking"
+    },
+    {
+      "id": 9,
+      "tag": "RF-9C3D",
+      "name": "Priya Mehta",
+      "room": "Floor 1 CR",
+      "event": "access-denied",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": "No booking"
+    },
+    {
+      "id": 8,
+      "tag": "RF-7E5F",
+      "name": "Rahul Sharma",
+      "room": "Floor 1 CR",
+      "event": "check-out",
+      "time": "16:10",
+      "date": "2026-06-23",
+      "duration": "0 min"
+    },
+    {
+      "id": 7,
+      "tag": "RF-7E5F",
+      "name": "Rahul Sharma",
+      "room": "Floor 1 CR",
+      "event": "check-in",
+      "time": "16:09",
+      "date": "2026-06-23",
+      "duration": null
+    },
     {
       "id": 1,
       "tag": "RF-9C3D",
@@ -413,7 +593,16 @@
       "duration": null
     }
   ],
-  "rfidState": {},
+  "rfidState": {
+    "RF-6I1J": {
+      "room": "Floor 1 CR",
+      "since": 1782211226248
+    },
+    "RF-7E5F": {
+      "room": "Floor 1 CR",
+      "since": 1782211232096
+    }
+  },
   "systemSettings": {
     "globalLockdown": false,
     "gracePeriod": 15,
@@ -425,6 +614,132 @@
     "clientLogoUrl": "data:image/png;base64,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"
   },
   "auditLogs": [
+    {
+      "id": 156,
+      "timestamp": "2026-06-23T10:40:32.096Z",
+      "action": "ACCESS_GRANTED",
+      "user": "Rahul Sharma",
+      "details": "RFID scan checked in to Floor 1 CR for booking."
+    },
+    {
+      "id": 155,
+      "timestamp": "2026-06-23T10:40:31.203Z",
+      "action": "ACCESS_DENIED",
+      "user": "Priya Mehta",
+      "details": "Card scanned at Floor 1 CR - Denied: No active booking today."
+    },
+    {
+      "id": 154,
+      "timestamp": "2026-06-23T10:40:29.620Z",
+      "action": "ACCESS_DENIED",
+      "user": "Divyam",
+      "details": "Card scanned at Floor 1 CR - Denied: No active booking today."
+    },
+    {
+      "id": 153,
+      "timestamp": "2026-06-23T10:40:28.712Z",
+      "action": "ACCESS_DENIED",
+      "user": "Authorized Test User",
+      "details": "Card scanned at Floor 1 CR - Denied: No active booking today."
+    },
+    {
+      "id": 152,
+      "timestamp": "2026-06-23T10:40:28.031Z",
+      "action": "ACCESS_DENIED",
+      "user": "dhruv",
+      "details": "Card scanned at Floor 1 CR - Denied: No active booking today."
+    },
+    {
+      "id": 151,
+      "timestamp": "2026-06-23T10:40:27.413Z",
+      "action": "ACCESS_DENIED",
+      "user": "Test Account",
+      "details": "Card scanned at Floor 1 CR - Denied: No active booking today."
+    },
+    {
+      "id": 150,
+      "timestamp": "2026-06-23T10:40:26.249Z",
+      "action": "ACCESS_GRANTED",
+      "user": "Vikram Singh",
+      "details": "Unlocked Floor 1 CR via Admin Override"
+    },
+    {
+      "id": 149,
+      "timestamp": "2026-06-23T10:40:24.930Z",
+      "action": "ACCESS_DENIED",
+      "user": "Neha Gupta",
+      "details": "Card scanned at Floor 1 CR - Denied: No active booking today."
+    },
+    {
+      "id": 148,
+      "timestamp": "2026-06-23T10:40:24.067Z",
+      "action": "ACCESS_CLOSED",
+      "user": "Rahul Sharma",
+      "details": "RFID scan checked out of Floor 1 CR. Duration: 0 min"
+    },
+    {
+      "id": 147,
+      "timestamp": "2026-06-23T10:40:22.594Z",
+      "action": "ACCESS_DENIED",
+      "user": "Arjun Kapoor",
+      "details": "Card scanned at Floor 1 CR - Denied: No active booking today."
+    },
+    {
+      "id": 146,
+      "timestamp": "2026-06-23T10:40:19.383Z",
+      "action": "ACCESS_DENIED",
+      "user": "Priya Mehta",
+      "details": "Card scanned at Floor 1 CR - Denied: No active booking today."
+    },
+    {
+      "id": 145,
+      "timestamp": "2026-06-23T10:40:17.983Z",
+      "action": "ACCESS_DENIED",
+      "user": "Priya Mehta",
+      "details": "Card scanned at Floor 1 CR - Denied: No active booking today."
+    },
+    {
+      "id": 144,
+      "timestamp": "2026-06-23T10:40:12.914Z",
+      "action": "ACCESS_GRANTED",
+      "user": "Rahul Sharma",
+      "details": "RFID scan checked in to Floor 1 CR for booking."
+    },
+    {
+      "id": 143,
+      "timestamp": "2026-06-23T10:40:08.165Z",
+      "action": "ACCESS_DENIED",
+      "user": "Priya Mehta",
+      "details": "Card scanned at Floor 1 CR - Denied: No active booking today."
+    },
+    {
+      "id": 142,
+      "timestamp": "2026-06-23T10:40:06.784Z",
+      "action": "ACCESS_DENIED",
+      "user": "Priya Mehta",
+      "details": "Card scanned at Floor 1 CR - Denied: No active booking today."
+    },
+    {
+      "id": 141,
+      "timestamp": "2026-06-23T10:40:03.702Z",
+      "action": "ACCESS_DENIED",
+      "user": "Priya Mehta",
+      "details": "Card scanned at Floor 1 CR - Denied: No active booking today."
+    },
+    {
+      "id": 140,
+      "timestamp": "2026-06-23T10:40:02.536Z",
+      "action": "ACCESS_CLOSED",
+      "user": "Rahul Sharma",
+      "details": "RFID scan checked out of Floor 1 CR. Duration: 0 min"
+    },
+    {
+      "id": 139,
+      "timestamp": "2026-06-23T10:39:58.796Z",
+      "action": "ACCESS_GRANTED",
+      "user": "Rahul Sharma",
+      "details": "RFID scan checked in to Floor 1 CR for booking."
+    },
     {
       "id": 138,
       "timestamp": "2026-06-23T10:07:08.445Z",

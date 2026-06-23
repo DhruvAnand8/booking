@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Room Status Display | Smart Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4F46E5;
+      --primary-glow: rgba(79, 70, 229, 0.15);
+      --success: #10B981;
+      --success-glow: rgba(16, 185, 129, 0.2);
+      --danger: #EF4444;
+      --danger-glow: rgba(239, 68, 68, 0.2);
+      --warning: #F59E0B;
+      --warning-glow: rgba(245, 158, 11, 0.2);
+      --slate-50: #F8FAFC;
+      --slate-100: #F1F5F9;
+      --slate-300: #CBD5E1;
+      --slate-400: #94A3B8;
+      --slate-700: #334155;
+      --slate-800: #1E293B;
+      --slate-900: #0F172A;
+      --slate-950: #0B0F19;
+      --white: #ffffff;
+      --font-display: 'Outfit', sans-serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--slate-950);
+      color: var(--slate-100);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 20px 40px;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), #3730A3);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .brand-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--white);
+      fill: none;
+      stroke-width: 2.5;
+    }
+
+    .brand-text {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
+
+    .room-selector-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .room-selector-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--slate-400);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .room-select {
+      background: var(--slate-900);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 8px 16px;
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .room-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      padding: 24px 40px;
+      height: calc(100vh - 81px);
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      overflow-y: auto;
+    }
+
+    /* CARD STYLE */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    /* LIVE STATUS CARD */
+    .status-card {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .status-card.available {
+      border-color: rgba(16, 185, 129, 0.2);
+      box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.1);
+    }
+
+    .status-card.occupied {
+      border-color: rgba(239, 68, 68, 0.2);
+      box-shadow: 0 10px 40px -10px rgba(239, 68, 68, 0.1);
+    }
+
+    .status-card.pending {
+      border-color: rgba(245, 158, 11, 0.2);
+      box-shadow: 0 10px 40px -10px rgba(245, 158, 11, 0.1);
+    }
+
+    .status-pulse {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      z-index: 1;
+      animation: pulse-glow 3s infinite alternate;
+    }
+
+    .status-card.available .status-pulse { background-color: var(--success); }
+    .status-card.occupied .status-pulse { background-color: var(--danger); }
+    .status-card.pending .status-pulse { background-color: var(--warning); }
+
+    @keyframes pulse-glow {
+      from { transform: scale(0.9); opacity: 0.1; }
+      to { transform: scale(1.2); opacity: 0.25; }
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .status-card.available .status-badge { background: var(--success-glow); color: var(--success); }
+    .status-card.occupied .status-badge { background: var(--danger-glow); color: var(--danger); }
+    .status-card.pending .status-badge { background: var(--warning-glow); color: var(--warning); }
+
+    .status-title {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -1px;
+      text-align: center;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .status-desc {
+      font-size: 15px;
+      color: var(--slate-400);
+      text-align: center;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 2;
+      max-width: 480px;
+    }
+
+    .timer-display {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 8px 24px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .timer-display svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--slate-400);
+      fill: none;
+      stroke-width: 2.2;
+    }
+
+    /* IMPROMPTU BOOKING PANEL */
+    .quick-book-card {
+      padding: 30px;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--primary);
+      fill: none;
+      stroke-width: 2.5;
+    }
+
+    .impromptu-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-row-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--slate-400);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      stroke: var(--slate-400);
+      fill: none;
+      stroke-width: 2.2;
+      pointer-events: none;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 10px 14px 10px 38px;
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    /* SEGMENTED CONTROL FOR DURATION */
+    .duration-segment {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .segment-btn {
+      background: transparent;
+      border: none;
+      color: var(--slate-400);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .segment-btn:hover {
+      color: var(--white);
+    }
+
+    .segment-btn.active {
+      background: var(--primary);
+      color: var(--white);
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+    }
+
+    .book-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary), #3730A3);
+      border: none;
+      border-radius: 8px;
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px var(--primary-glow);
+      transition: all 0.2s;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .book-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px var(--primary-glow);
+    }
+
+    .book-btn:active {
+      transform: translateY(0);
+    }
+
+    .book-btn:disabled {
+      background: var(--slate-800);
+      color: var(--slate-400);
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* AGENDA PANEL */
+    .agenda-card {
+      flex: 1;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .agenda-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      max-height: 400px;
+      padding-right: 4px;
+    }
+
+    .agenda-list::-webkit-scrollbar {
+      width: 4px;
+    }
+    .agenda-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+    }
+
+    .agenda-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 10px;
+    }
+
+    .agenda-item.active {
+      border-color: rgba(79, 70, 229, 0.3);
+      background: rgba(79, 70, 229, 0.03);
+    }
+
+    .agenda-time {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary-light);
+      min-width: 90px;
+      flex-shrink: 0;
+    }
+
+    .agenda-detail {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .agenda-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .agenda-meta {
+      font-size: 11px;
+      color: var(--slate-400);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .agenda-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .agenda-badge.approved { background: var(--success-glow); color: var(--success); }
+    .agenda-badge.pending { background: var(--warning-glow); color: var(--warning); }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--slate-800);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 12px 24px;
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 100;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .toast.success { border-color: rgba(16, 185, 129, 0.3); }
+    .toast.danger { border-color: rgba(239, 68, 68, 0.3); }
+    .toast.warning { border-color: rgba(245, 158, 11, 0.3); }
+
+    .toast.success .toast-icon { color: var(--success); }
+    .toast.danger .toast-icon { color: var(--danger); }
+    .toast.warning .toast-icon { color: var(--warning); }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand-wrap">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="4"/>
+          <path d="M9 9h6M9 13h6M9 17h4"/>
+        </svg>
+      </div>
+      <span class="brand-text">E-Conference</span>
+    </div>
+    
+    <div class="room-selector-wrap">
+      <span class="room-selector-label">Display Screen For:</span>
+      <select class="room-select" id="room-select-dropdown" onchange="changeActiveRoom(this.value)">
+        <!-- Loaded dynamically -->
+      </select>
+    </div>
+  </header>
+
+  <!-- MAIN AREA -->
+  <main>
+    
+    <!-- LEFT COLUMN: Live Status & Impromptu -->
+    <div class="left-column">
+      
+      <!-- Live Status Card -->
+      <div class="glass-card status-card available" id="status-card-display">
+        <div class="status-pulse"></div>
+        <div class="status-badge" id="status-badge-text">Available</div>
+        <div class="status-title" id="status-main-title">Ready for Booking</div>
+        <div class="status-desc" id="status-description">This room is currently empty. Scan your badge or enter your ID below to start an impromptu meeting immediately.</div>
+        
+        <div class="timer-display" id="time-remaining-wrap" style="display: none;">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+          <span id="time-remaining-text">Remaining: 42m 15s</span>
+        </div>
+      </div>
+
+      <!-- Impromptu Card -->
+      <div class="glass-card quick-book-card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span>Quick Impromptu Meeting</span>
+        </div>
+        
+        <div class="impromptu-form">
+          <div class="form-row-layout">
+            <div class="form-group">
+              <label class="form-label">Employee ID</label>
+              <div class="input-wrap">
+                <svg class="input-icon" viewBox="0 0 24 24">
+                  <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                <input type="text" class="form-input" id="impromptu-emp-id" placeholder="e.g. E001">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Meeting Duration</label>
+              <div class="duration-segment">
+                <button class="segment-btn active" onclick="selectDuration(10, this)">10 Min</button>
+                <button class="segment-btn" onclick="selectDuration(20, this)">20 Min</button>
+                <button class="segment-btn" onclick="selectDuration(30, this)">30 Min</button>
+              </div>
+            </div>
+          </div>
+          
+          <button class="book-btn" id="btn-submit-impromptu" onclick="submitImpromptuBooking()">
+            Start Impromptu Meeting
+            <svg style="width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.5;" viewBox="0 0 24 24">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: Agenda -->
+    <div class="glass-card agenda-card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" style="stroke: var(--warning);">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <span>Today's Upcoming Agenda</span>
+      </div>
+      
+      <div class="agenda-list" id="upcoming-agenda-list">
+        <!-- Loaded dynamically -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast-notification">
+    <!-- Icon injected dynamically -->
+    <span id="toast-text">Toast Message</span>
+  </div>
+
+  <script>
+    // Global fetch interceptor to support separate backend hosting (same as app.js)
+    const BACKEND_URL = 'https://room-booking-backend.onrender.com';
+    const originalFetch = window.fetch;
+    window.fetch = function (url, options) {
+      if (typeof url === 'string' && url.startsWith('/api/')) {
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+          url = BACKEND_URL.replace(/\/$/, '') + url;
+        }
+      }
+      return originalFetch(url, options);
+    };
+
+    let state = { rooms: [], employees: [], bookings: [] };
+    let activeRoomName = '';
+    let selectedDurationMin = 10;
+    let timerInterval = null;
+
+    // Load initial configurations
+    document.addEventListener('DOMContentLoaded', () => {
+      // Load selected room from localStorage if present
+      const savedRoom = localStorage.getItem('displayActiveRoom');
+      if (savedRoom) {
+        activeRoomName = savedRoom;
+      }
+      
+      syncState();
+      // Poll database every 3 seconds for real-time room display updates
+      setInterval(syncState, 3000);
+    });
+
+    async function syncState() {
+      try {
+        const res = await fetch('/api/state');
+        if (!res.ok) throw new Error('Offline');
+        state = await res.json();
+        
+        // Populate room dropdown if empty
+        const select = document.getElementById('room-select-dropdown');
+        if (select.children.length === 0 && state.rooms.length > 0) {
+          if (!activeRoomName) {
+            activeRoomName = state.rooms[0].name;
+          }
+          
+          state.rooms.forEach(r => {
+            const opt = document.createElement('option');
+            opt.value = r.name;
+            opt.textContent = r.name;
+            select.appendChild(opt);
+          });
+          select.value = activeRoomName;
+        }
+
+        renderDisplay();
+      } catch (err) {
+        console.error('Failed to sync display state', err);
+        showToast('Offline: Reconnecting to server...', 'warning');
+      }
+    }
+
+    function changeActiveRoom(roomName) {
+      activeRoomName = roomName;
+      localStorage.setItem('displayActiveRoom', roomName);
+      renderDisplay();
+    }
+
+    function selectDuration(mins, btn) {
+      selectedDurationMin = mins;
+      document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast-notification');
+      const text = document.getElementById('toast-text');
+      
+      toast.className = `toast ${type}`;
+      text.textContent = message;
+      
+      // Inject correct SVG icon
+      let iconHtml = '';
+      if (type === 'success') {
+        iconHtml = `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14M22 4L12 14.01l-3-3"/></svg>`;
+      } else if (type === 'danger') {
+        iconHtml = `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+      } else {
+        iconHtml = `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+      }
+      
+      // Remove old icon if exists
+      const oldSvg = toast.querySelector('svg');
+      if (oldSvg) oldSvg.remove();
+      toast.insertAdjacentHTML('afterbegin', iconHtml);
+      
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
+    }
+
+    // Helper to calculate minutes from HH:MM string
+    function timeStrToMins(timeStr) {
+      const [h, m] = timeStr.split(':').map(Number);
+      return h * 60 + m;
+    }
+
+    // Helper to parse duration string (e.g., "1 hour", "30 minutes") into minutes
+    function durationToMins(durationStr) {
+      const lower = durationStr.toLowerCase();
+      if (lower.includes('minute')) {
+        return parseInt(lower) || 30;
+      } else if (lower.includes('hour')) {
+        const val = parseFloat(lower);
+        return Math.round(val * 60);
+      } else if (lower.includes('half day')) {
+        return 240;
+      } else if (lower.includes('full day')) {
+        return 480;
+      }
+      return 60;
+    }
+
+    function renderDisplay() {
+      if (!activeRoomName) return;
+      
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMin = now.getMinutes();
+      const currentTotalMins = currentHour * 60 + currentMin;
+      const todayStr = now.toISOString().split('T')[0];
+
+      // Get bookings for this room for today
+      const todayBookings = state.bookings.filter(b => b.room === activeRoomName && b.date === todayStr && b.status !== 'rejected');
+      
+      // Find current booking
+      let currentBooking = null;
+      let isPendingApproval = false;
+      
+      todayBookings.forEach(b => {
+        const startMins = timeStrToMins(b.start);
+        const endMins = startMins + durationToMins(b.duration);
+        if (currentTotalMins >= startMins && currentTotalMins < endMins) {
+          currentBooking = b;
+          if (b.status === 'pending') {
+            isPendingApproval = true;
+          }
+        }
+      });
+
+      // Update Live Status Card
+      const card = document.getElementById('status-card-display');
+      const badge = document.getElementById('status-badge-text');
+      const title = document.getElementById('status-main-title');
+      const desc = document.getElementById('status-description');
+      const timerWrap = document.getElementById('time-remaining-wrap');
+      const bookBtn = document.getElementById('btn-submit-impromptu');
+
+      // Clear countdown interval
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+
+      if (currentBooking) {
+        // OCCUPIED or PENDING
+        const emp = state.employees.find(e => e.id === currentBooking.empId) || { name: 'Unknown Employee' };
+        
+        if (isPendingApproval) {
+          card.className = 'glass-card status-card pending';
+          badge.textContent = 'Pending Approval';
+          title.textContent = currentBooking.purpose || 'Meeting Pending';
+          desc.textContent = `Booked by ${emp.name} (${currentBooking.start} for ${currentBooking.duration}). Room will auto-approve 30 mins before start if available.`;
+        } else {
+          card.className = 'glass-card status-card occupied';
+          badge.textContent = 'Occupied';
+          title.textContent = currentBooking.purpose || 'Meeting in Progress';
+          desc.textContent = `Organized by ${emp.name} (${currentBooking.start} for ${currentBooking.duration})`;
+        }
+        
+        // Show remaining time
+        timerWrap.style.display = 'flex';
+        bookBtn.disabled = true;
+
+        const startMins = timeStrToMins(currentBooking.start);
+        const totalDuration = durationToMins(currentBooking.duration);
+        const endMins = startMins + totalDuration;
+        
+        // Start live countdown ticker
+        updateCountdown(endMins);
+        timerInterval = setInterval(() => {
+          updateCountdown(endMins);
+        }, 1000);
+
+      } else {
+        // AVAILABLE
+        card.className = 'glass-card status-card available';
+        badge.textContent = 'Available';
+        title.textContent = 'Ready for Booking';
+        desc.textContent = 'This room is currently empty. Scan your badge or enter your ID below to start an impromptu meeting immediately.';
+        timerWrap.style.display = 'none';
+        bookBtn.disabled = false;
+      }
+
+      // Update Upcoming Agenda List
+      const agendaContainer = document.getElementById('upcoming-agenda-list');
+      agendaContainer.innerHTML = '';
+      
+      // Sort upcoming bookings
+      const upcomingBookings = todayBookings
+        .filter(b => {
+          const startMins = timeStrToMins(b.start);
+          return startMins >= currentTotalMins || (currentBooking && b.id === currentBooking.id);
+        })
+        .sort((a, b) => timeStrToMins(a.start) - timeStrToMins(b.start));
+
+      if (upcomingBookings.length === 0) {
+        agendaContainer.innerHTML = `<div style="padding: 40px; text-align: center; color: var(--slate-400); font-weight: 500; font-size: 13.5px;">No more meetings scheduled for today.</div>`;
+      } else {
+        upcomingBookings.forEach(b => {
+          const isActive = currentBooking && b.id === currentBooking.id;
+          const emp = state.employees.find(e => e.id === b.empId) || { name: 'Unknown' };
+          
+          const item = document.createElement('div');
+          item.className = `agenda-item ${isActive ? 'active' : ''}`;
+          
+          item.innerHTML = `
+            <div class="agenda-time">${b.start} <span style="font-size: 11px; color: var(--slate-400); display: block; font-weight: 500;">${b.duration}</span></div>
+            <div class="agenda-detail">
+              <div class="agenda-name">${b.purpose || 'Meeting'}</div>
+              <div class="agenda-meta">${emp.name} (${emp.dept || 'Engineering'})</div>
+            </div>
+            <div class="agenda-badge ${b.status}">${b.status}</div>
+          `;
+          
+          agendaContainer.appendChild(item);
+        });
+      }
+    }
+
+    function updateCountdown(endMins) {
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMin = now.getMinutes();
+      const currentSec = now.getSeconds();
+      
+      const currentTotalSeconds = (currentHour * 60 + currentMin) * 60 + currentSec;
+      const endTotalSeconds = endMins * 60 * 60; // Wait, endMins is in minutes, so endMins * 60
+      const endTotalSecs = endMins * 60;
+      
+      const diffSecs = endTotalSecs - currentTotalSeconds;
+      
+      if (diffSecs <= 0) {
+        document.getElementById('time-remaining-text').textContent = 'Meeting Ended';
+        syncState(); // reload state
+      } else {
+        const h = Math.floor(diffSecs / 3600);
+        const m = Math.floor((diffSecs % 3600) / 60);
+        const s = diffSecs % 60;
+        
+        let displayStr = 'Remaining: ';
+        if (h > 0) displayStr += `${h}h `;
+        displayStr += `${m}m ${s}s`;
+        
+        document.getElementById('time-remaining-text').textContent = displayStr;
+      }
+    }
+
+    async function submitImpromptuBooking() {
+      const empIdInput = document.getElementById('impromptu-emp-id');
+      const empId = empIdInput.value.trim().toUpperCase();
+      
+      if (!empId) {
+        return showToast('Please enter your Employee ID.', 'warning');
+      }
+
+      // Check if employee ID exists in local directory state
+      const empExists = state.employees.some(e => e.id.toUpperCase() === empId);
+      if (!empExists) {
+        return showToast(`Employee ID ${empId} not found.`, 'danger');
+      }
+
+      const now = new Date();
+      const startHour = now.getHours().toString().padStart(2, '0');
+      const startMin = now.getMinutes().toString().padStart(2, '0');
+      const startTime = `${startHour}:${startMin}`;
+      const dateStr = now.toISOString().split('T')[0];
+      const durationStr = `${selectedDurationMin} minutes`;
+
+      // Pre-validate collision check locally before submitting
+      const conflict = hasLocalConflict({ room: activeRoomName, date: dateStr, start: startTime, duration: durationStr });
+      if (conflict) {
+        return showToast('Time slot conflicts with an upcoming meeting!', 'danger');
+      }
+
+      try {
+        const res = await fetch('/api/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            empId,
+            room: activeRoomName,
+            date: dateStr,
+            start: startTime,
+            duration: durationStr,
+            purpose: 'Impromptu Meeting',
+            status: 'approved' // ad-hoc screen bookings are approved immediately
+          })
+        });
+
+        if (res.ok) {
+          showToast('Impromptu meeting started!', 'success');
+          empIdInput.value = '';
+          syncState();
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          showToast(errData.message || 'Booking conflict or error.', 'danger');
+        }
+      } catch (err) {
+        showToast('Network error starting meeting.', 'danger');
+      }
+    }
+
+    // Helper to calculate intervals
+    function parseInterval(startStr, durationStr) {
+      const [hStr, mStr] = startStr.split(':');
+      const startMin = parseInt(hStr) * 60 + parseInt(mStr);
+      const durationMin = durationToMins(durationStr);
+      return [startMin, startMin + durationMin];
+    }
+
+    // Local collision check helper
+    function hasLocalConflict(newBk) {
+      const [newStart, newEnd] = parseInterval(newBk.start, newBk.duration);
+      const todayStr = newBk.date;
+      
+      // Filter active approved bookings for the room
+      const roomBookings = state.bookings.filter(b => b.room === newBk.room && b.date === todayStr && b.status === 'approved');
+      
+      return roomBookings.some(b => {
+        const [existingStart, existingEnd] = parseInterval(b.start, b.duration);
+        return newStart < existingEnd && existingStart < newEnd;
+      });
+    }
+  </script>
+</body>
+</html>
