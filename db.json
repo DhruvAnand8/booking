@@ -2,121 +2,121 @@
   "rooms": [
     {
       "id": "R001",
-      "name": "Floor 1 Conference Room",
+      "name": "Floor 1 CR",
       "capacity": 12,
       "lockStatus": "Normal"
     },
     {
       "id": "R002",
-      "name": "Floor 1 Meeting Room 1",
+      "name": "Floor 1 MR 1",
       "capacity": 6,
       "lockStatus": "Normal"
     },
     {
       "id": "R003",
-      "name": "Floor 1 Meeting Room 2",
+      "name": "Floor 1 MR 2",
       "capacity": 6,
       "lockStatus": "Normal"
     },
     {
       "id": "R004",
-      "name": "Floor 1 Meeting Room 3",
+      "name": "Floor 1 MR 3",
       "capacity": 8,
       "lockStatus": "Normal"
     },
     {
       "id": "R005",
-      "name": "Floor 2 Conference Room",
+      "name": "Floor 2 CR",
       "capacity": 12,
       "lockStatus": "Normal"
     },
     {
       "id": "R006",
-      "name": "Floor 2 Meeting Room 1",
+      "name": "Floor 2 MR 1",
       "capacity": 6,
       "lockStatus": "Normal"
     },
     {
       "id": "R007",
-      "name": "Floor 2 Meeting Room 2",
+      "name": "Floor 2 MR 2",
       "capacity": 6,
       "lockStatus": "Normal"
     },
     {
       "id": "R008",
-      "name": "Floor 2 Meeting Room 3",
+      "name": "Floor 2 MR 3",
       "capacity": 8,
       "lockStatus": "Normal"
     },
     {
       "id": "R009",
-      "name": "Floor 3 Conference Room",
+      "name": "Floor 3 CR",
       "capacity": 12,
       "lockStatus": "Normal"
     },
     {
       "id": "R010",
-      "name": "Floor 3 Meeting Room 1",
+      "name": "Floor 3 MR 1",
       "capacity": 6,
       "lockStatus": "Normal"
     },
     {
       "id": "R011",
-      "name": "Floor 3 Meeting Room 2",
+      "name": "Floor 3 MR 2",
       "capacity": 6,
       "lockStatus": "Normal"
     },
     {
       "id": "R012",
-      "name": "Floor 3 Meeting Room 3",
+      "name": "Floor 3 MR 3",
       "capacity": 8,
       "lockStatus": "Normal"
     },
     {
       "id": "R013",
-      "name": "Floor 4 Conference Room",
+      "name": "Floor 4 CR",
       "capacity": 12,
       "lockStatus": "Normal"
     },
     {
       "id": "R014",
-      "name": "Floor 4 Meeting Room 1",
+      "name": "Floor 4 MR 1",
       "capacity": 6,
       "lockStatus": "Normal"
     },
     {
       "id": "R015",
-      "name": "Floor 4 Meeting Room 2",
+      "name": "Floor 4 MR 2",
       "capacity": 6,
       "lockStatus": "Normal"
     },
     {
       "id": "R016",
-      "name": "Floor 4 Meeting Room 3",
+      "name": "Floor 4 MR 3",
       "capacity": 8,
       "lockStatus": "Normal"
     },
     {
       "id": "R017",
-      "name": "Floor 5 Conference Room",
+      "name": "Floor 5 CR",
       "capacity": 12,
       "lockStatus": "Normal"
     },
     {
       "id": "R018",
-      "name": "Floor 5 Meeting Room 1",
+      "name": "Floor 5 MR 1",
       "capacity": 6,
       "lockStatus": "Normal"
     },
     {
       "id": "R019",
-      "name": "Floor 5 Meeting Room 2",
+      "name": "Floor 5 MR 2",
       "capacity": 6,
       "lockStatus": "Normal"
     },
     {
       "id": "R020",
-      "name": "Floor 5 Meeting Room 3",
+      "name": "Floor 5 MR 3",
       "capacity": 8,
       "lockStatus": "Normal"
     }
@@ -245,7 +245,7 @@
     {
       "id": 1,
       "empId": "E003",
-      "room": "Floor 1 Conference Room",
+      "room": "Floor 1 CR",
       "date": "2026-06-23",
       "start": "09:00",
       "duration": "1 hour",
@@ -257,7 +257,7 @@
     {
       "id": 2,
       "empId": "E004",
-      "room": "Floor 1 Meeting Room 1",
+      "room": "Floor 1 MR 1",
       "date": "2026-06-23",
       "start": "10:00",
       "duration": "1 hour",
@@ -269,7 +269,7 @@
     {
       "id": 3,
       "empId": "E001",
-      "room": "Floor 2 Conference Room",
+      "room": "Floor 2 CR",
       "date": "2026-06-23",
       "start": "11:00",
       "duration": "1 hour",
@@ -281,7 +281,7 @@
     {
       "id": 4,
       "empId": "E005",
-      "room": "Floor 2 Meeting Room 1",
+      "room": "Floor 2 MR 1",
       "date": "2026-06-23",
       "start": "14:00",
       "duration": "2 hours",
@@ -293,7 +293,7 @@
     {
       "id": 5,
       "empId": "E001",
-      "room": "Floor 1 Conference Room",
+      "room": "Floor 1 CR",
       "date": "2026-06-24",
       "start": "10:00",
       "duration": "1.5 hours",
@@ -305,7 +305,7 @@
     {
       "id": 6,
       "empId": "E003",
-      "room": "Floor 1 Meeting Room 1",
+      "room": "Floor 1 MR 1",
       "date": "2026-06-24",
       "start": "14:00",
       "duration": "1 hour",
@@ -317,7 +317,7 @@
     {
       "id": 7,
       "empId": "E004",
-      "room": "Floor 2 Conference Room",
+      "room": "Floor 2 CR",
       "date": "2026-06-25",
       "start": "09:00",
       "duration": "1 hour",
@@ -329,7 +329,7 @@
     {
       "id": 8,
       "empId": "E005",
-      "room": "Floor 1 Conference Room",
+      "room": "Floor 1 CR",
       "date": "2026-06-25",
       "start": "15:00",
       "duration": "1 hour",
@@ -341,7 +341,7 @@
     {
       "id": 9,
       "empId": "E005",
-      "room": "Floor 2 Meeting Room 1",
+      "room": "Floor 2 MR 1",
       "date": "2026-06-23",
       "start": "13:00",
       "duration": "1 hour",
@@ -356,7 +356,7 @@
       "id": 1,
       "tag": "RF-9C3D",
       "name": "Priya Mehta",
-      "room": "Floor 1 Conference Room",
+      "room": "Floor 1 CR",
       "event": "check-in",
       "time": "09:01",
       "date": "2026-06-23",
@@ -366,7 +366,7 @@
       "id": 2,
       "tag": "RF-9C3D",
       "name": "Priya Mehta",
-      "room": "Floor 1 Conference Room",
+      "room": "Floor 1 CR",
       "event": "check-out",
       "time": "09:58",
       "date": "2026-06-23",
@@ -376,7 +376,7 @@
       "id": 3,
       "tag": "RF-7E5F",
       "name": "Rahul Sharma",
-      "room": "Floor 1 Conference Room",
+      "room": "Floor 1 CR",
       "event": "check-in",
       "time": "09:00",
       "date": "2026-06-23",
@@ -386,7 +386,7 @@
       "id": 4,
       "tag": "RF-2G8H",
       "name": "Neha Gupta",
-      "room": "Floor 1 Meeting Room 1",
+      "room": "Floor 1 MR 1",
       "event": "check-in",
       "time": "10:03",
       "date": "2026-06-23",
@@ -396,7 +396,7 @@
       "id": 5,
       "tag": "RF-2G8H",
       "name": "Neha Gupta",
-      "room": "Floor 1 Meeting Room 1",
+      "room": "Floor 1 MR 1",
       "event": "check-out",
       "time": "11:07",
       "date": "2026-06-23",
@@ -406,7 +406,7 @@
       "id": 6,
       "tag": "RF-4A2B",
       "name": "Arjun Kapoor",
-      "room": "Floor 2 Conference Room",
+      "room": "Floor 2 CR",
       "event": "check-in",
       "time": "11:02",
       "date": "2026-06-23",
@@ -640,7 +640,7 @@
       "timestamp": "2026-06-23T09:17:40.908Z",
       "action": "AUTO_APPROVE",
       "user": "System",
-      "details": "Auto-approved pending booking ID 4 for Floor 2 Meeting Room 1 as slot starts in <30 mins and room is available."
+      "details": "Auto-approved pending booking ID 4 for Floor 2 MR 1 as slot starts in <30 mins and room is available."
     },
     {
       "id": 80,
@@ -675,21 +675,21 @@
       "timestamp": "2026-06-23T05:00:13.663Z",
       "action": "BOOKING_DELETE",
       "user": "System",
-      "details": "Cancelled reservation for Floor 3 Meeting Room 3 on 2026-06-23"
+      "details": "Cancelled reservation for Floor 3 MR 3 on 2026-06-23"
     },
     {
       "id": 75,
       "timestamp": "2026-06-23T05:00:13.654Z",
       "action": "AUTO_APPROVE",
       "user": "System",
-      "details": "Auto-approved pending booking ID 10 for Floor 3 Meeting Room 3 as slot starts in <30 mins and room is available."
+      "details": "Auto-approved pending booking ID 10 for Floor 3 MR 3 as slot starts in <30 mins and room is available."
     },
     {
       "id": 74,
       "timestamp": "2026-06-23T05:00:13.650Z",
       "action": "BOOKING_CREATE",
       "user": "Arjun Kapoor",
-      "details": "Requested reservation for Floor 3 Meeting Room 3 on 2026-06-23 at 10:45"
+      "details": "Requested reservation for Floor 3 MR 3 on 2026-06-23 at 10:45"
     },
     {
       "id": 73,
@@ -717,49 +717,49 @@
       "timestamp": "2026-06-23T04:52:55.189Z",
       "action": "BOOKING_CREATE",
       "user": "Vikram Singh",
-      "details": "Requested reservation for Floor 2 Meeting Room 1 on 2026-06-23 at 13:00"
+      "details": "Requested reservation for Floor 2 MR 1 on 2026-06-23 at 13:00"
     },
     {
       "id": 69,
       "timestamp": "2026-06-23T04:47:10.044Z",
       "action": "BOOKING_DELETE",
       "user": "System",
-      "details": "Cancelled reservation for Floor 2 Conference Room on 2026-06-23"
+      "details": "Cancelled reservation for Floor 2 CR on 2026-06-23"
     },
     {
       "id": 68,
       "timestamp": "2026-06-23T04:47:10.042Z",
       "action": "BOOKING_CREATE",
       "user": "Arjun Kapoor",
-      "details": "Requested reservation for Floor 2 Conference Room on 2026-06-23 at 12:00"
+      "details": "Requested reservation for Floor 2 CR on 2026-06-23 at 12:00"
     },
     {
       "id": 67,
       "timestamp": "2026-06-23T04:46:29.154Z",
       "action": "BOOKING_DELETE",
       "user": "System",
-      "details": "Cancelled reservation for Floor 2 Conference Room on 2026-06-23"
+      "details": "Cancelled reservation for Floor 2 CR on 2026-06-23"
     },
     {
       "id": 66,
       "timestamp": "2026-06-23T04:46:29.149Z",
       "action": "BOOKING_CREATE",
       "user": "Arjun Kapoor",
-      "details": "Requested reservation for Floor 2 Conference Room on 2026-06-23 at 12:00"
+      "details": "Requested reservation for Floor 2 CR on 2026-06-23 at 12:00"
     },
     {
       "id": 65,
       "timestamp": "2026-06-23T04:46:29.148Z",
       "action": "BOOKING_CREATE",
       "user": "Arjun Kapoor",
-      "details": "Requested reservation for Floor 2 Conference Room on 2026-06-23 at 10:30"
+      "details": "Requested reservation for Floor 2 CR on 2026-06-23 at 10:30"
     },
     {
       "id": 64,
       "timestamp": "2026-06-23T04:46:29.142Z",
       "action": "BOOKING_CREATE",
       "user": "Arjun Kapoor",
-      "details": "Requested reservation for Floor 2 Conference Room on 2026-06-23 at 11:00"
+      "details": "Requested reservation for Floor 2 CR on 2026-06-23 at 11:00"
     },
     {
       "id": 63,

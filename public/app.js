@@ -1130,7 +1130,7 @@ async function cancelSummaryBooking(id) {
 // 1. Booking Modals
 function openBookModal() {
   document.getElementById('m-floor').value = '1';
-  document.getElementById('m-type').value = 'Conference Room';
+  document.getElementById('m-type').value = 'CR';
   updateQuickBookResolution();
   
   // Initialize purpose fields
@@ -1207,7 +1207,7 @@ function openAdminAddBookingModal() {
   userSelect.innerHTML = userHtml;
 
   document.getElementById('admin-booking-floor').value = '1';
-  document.getElementById('admin-booking-type').value = 'Conference Room';
+  document.getElementById('admin-booking-type').value = 'CR';
   updateAdminBookResolution();
 
   // Clear fields
