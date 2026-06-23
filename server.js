@@ -36,26 +36,7 @@ app.use((req, res, next) => {
   }
   next();
 });
-// Middleware to block direct access to sensitive backend files
-app.use((req, res, next) => {
-  const forbiddenFiles = [
-    '/server.js', 
-    '/db.json', 
-    '/package.json', 
-    '/package-lock.json', 
-    '/key.pem', 
-    '/cert.pem', 
-    '/.git',
-    '/.gitignore'
-  ];
-  const urlPath = req.path.toLowerCase();
-  if (forbiddenFiles.some(f => urlPath === f || urlPath.startsWith(f + '/'))) {
-    return res.status(403).send('Forbidden');
-  }
-  next();
-});
-
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Helper to read database
 // Overlap & Conflict checking helpers
