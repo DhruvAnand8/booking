@@ -617,6 +617,80 @@
       transform: scale(1);
     }
 
+    /* MEETING DETAILS MODAL STYLING */
+    .details-card {
+      width: 90%;
+      max-width: 340px;
+      padding: 24px 20px;
+      background: #FFFFFF;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-overlay.active .details-card {
+      transform: scale(1);
+    }
+
+    .details-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+      padding-bottom: 12px;
+    }
+
+    .details-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--slate-900);
+    }
+
+    .details-close-btn {
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      color: var(--slate-400);
+      cursor: pointer;
+      outline: none;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    .details-close-btn:hover {
+      color: var(--slate-800);
+    }
+
+    .details-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 14px;
+      text-align: left;
+    }
+
+    .details-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--slate-700);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .details-val {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--slate-800);
+    }
+
     .scanner-header {
       display: flex;
       flex-direction: column;
@@ -1099,6 +1173,20 @@
         <button class="scanner-cancel-btn" onclick="cancelFaceScan()">Cancel Verification</button>
       </div>
     </div>
+
+    <!-- MEETING DETAILS MODAL -->
+    <div class="modal-overlay" id="meeting-details-modal">
+      <div class="details-card">
+        <div class="details-header">
+          <div class="details-title">Meeting Details</div>
+          <button class="details-close-btn" onclick="closeMeetingDetails()">&times;</button>
+        </div>
+        <div class="details-body" id="details-body-content">
+          <!-- Details dynamic content -->
+        </div>
+        <button class="scanner-cancel-btn" onclick="closeMeetingDetails()" style="margin-top: 16px;">Close</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -1369,6 +1457,8 @@
           
           const item = document.createElement('div');
           item.className = `agenda-item ${isActive ? 'active' : ''}`;
+          item.style.cursor = 'pointer';
+          item.onclick = () => showMeetingDetails(b);
           
           item.innerHTML = `
             <div class="agenda-time">${b.start} <span style="font-size: 11px; color: var(--slate-400); display: block; font-weight: 500;">${b.duration}</span></div>
@@ -1581,6 +1671,46 @@
         const [existingStart, existingEnd] = parseInterval(b.start, b.duration);
         return newStart < existingEnd && existingStart < newEnd;
       });
+    }
+
+    // Modal display triggers for upcoming meeting details
+    function showMeetingDetails(booking) {
+      const emp = state.employees.find(e => e.id === booking.empId) || { name: 'Unknown', dept: 'N/A' };
+      const content = document.getElementById('details-body-content');
+      if (!content) return;
+      
+      content.innerHTML = `
+        <div class="details-row">
+          <div class="details-label">Organizer</div>
+          <div class="details-val">${emp.name} (${emp.dept})</div>
+        </div>
+        <div class="details-row">
+          <div class="details-label">Time & Duration</div>
+          <div class="details-val">${booking.start} (${booking.duration})</div>
+        </div>
+        <div class="details-row">
+          <div class="details-label">Room</div>
+          <div class="details-val">${booking.room}</div>
+        </div>
+        <div class="details-row">
+          <div class="details-label">Purpose / Agenda</div>
+          <div class="details-val">${booking.purpose || 'Client Meeting'}</div>
+        </div>
+        <div class="details-row" style="margin-bottom: 0;">
+          <div class="details-label">Status</div>
+          <div class="details-val" style="display: flex; align-items: center; gap: 6px;">
+            <span class="agenda-badge ${booking.status}" style="margin: 0; font-size: 11px; padding: 4px 10px;">${booking.status}</span>
+          </div>
+        </div>
+      `;
+      
+      const modal = document.getElementById('meeting-details-modal');
+      if (modal) modal.classList.add('active');
+    }
+
+    function closeMeetingDetails() {
+      const modal = document.getElementById('meeting-details-modal');
+      if (modal) modal.classList.remove('active');
     }
   </script>
 </body>
