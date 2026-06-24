@@ -786,8 +786,8 @@
       color: var(--slate-900);
     }
 
-    /* PHONE SIZE RESPONSIVE DISPLAY STYLES */
-    @media (max-width: 768px) {
+    /* PHONE SIZE DISPLAY STYLES */
+    @media (min-width: 0px) {
       body {
         height: auto;
         overflow-y: auto;
@@ -917,6 +917,20 @@
         height: 90px;
       }
     }
+
+    /* REAL PHONE VIEWPORT FULLSCREEN FIX */
+    @media (max-width: 480px) {
+      body {
+        background-color: var(--slate-950);
+      }
+      .phone-frame {
+        width: 100vw;
+        height: 100vh;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1007,7 +1021,7 @@
             </div>
             
             <div class="form-group">
-              <label class="form-label">Meeting Purpose / Agenda</label>
+              <label class="form-label">Purpose / Agenda</label>
               <div class="input-wrap">
                 <svg class="input-icon" viewBox="0 0 24 24" style="stroke: var(--primary);">
                   <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
