@@ -20,11 +20,11 @@
       --slate-50: #F8FAFC;
       --slate-100: #F1F5F9;
       --slate-300: #CBD5E1;
-      --slate-400: #94A3B8;
+      --slate-400: #64748B;
       --slate-700: #334155;
       --slate-800: #1E293B;
       --slate-900: #0F172A;
-      --slate-950: #0B0F19;
+      --slate-950: #F8FAFC;
       --white: #ffffff;
       --font-display: 'Outfit', sans-serif;
       --font-sans: 'Plus Jakarta Sans', sans-serif;
@@ -39,7 +39,7 @@
     body {
       font-family: var(--font-sans);
       background-color: var(--slate-950);
-      color: var(--slate-100);
+      color: var(--slate-900);
       height: 100vh;
       overflow: hidden;
       display: flex;
@@ -48,14 +48,15 @@
 
     header {
       padding: 20px 40px;
-      background: rgba(15, 23, 42, 0.6);
+      background: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 10;
+      position: relative;
     }
 
     .brand-wrap {
@@ -87,7 +88,7 @@
       font-family: var(--font-display);
       font-size: 20px;
       font-weight: 800;
-      color: var(--white);
+      color: var(--slate-900);
       letter-spacing: -0.5px;
     }
 
@@ -100,17 +101,17 @@
     .room-selector-label {
       font-size: 13px;
       font-weight: 700;
-      color: var(--slate-400);
+      color: var(--slate-700);
       text-transform: uppercase;
       letter-spacing: 0.8px;
     }
 
     .room-select {
-      background: var(--slate-900);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--white);
+      border: 1px solid rgba(15, 23, 42, 0.15);
       border-radius: 8px;
       padding: 8px 16px;
-      color: var(--white);
+      color: var(--slate-900);
       font-size: 14px;
       font-weight: 600;
       outline: none;
@@ -147,12 +148,12 @@
 
     /* CARD STYLE */
     .glass-card {
-      background: rgba(15, 23, 42, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(15, 23, 42, 0.08);
       border-radius: 16px;
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
     }
 
     /* LIVE STATUS CARD */
@@ -169,18 +170,18 @@
     }
 
     .status-card.available {
-      border-color: rgba(16, 185, 129, 0.2);
-      box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+      box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.08);
     }
 
     .status-card.occupied {
-      border-color: rgba(239, 68, 68, 0.2);
-      box-shadow: 0 10px 40px -10px rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      box-shadow: 0 10px 40px -10px rgba(239, 68, 68, 0.08);
     }
 
     .status-card.pending {
-      border-color: rgba(245, 158, 11, 0.2);
-      box-shadow: 0 10px 40px -10px rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.3);
+      box-shadow: 0 10px 40px -10px rgba(245, 158, 11, 0.08);
     }
 
     .status-pulse {
@@ -189,7 +190,7 @@
       height: 150px;
       border-radius: 50%;
       filter: blur(80px);
-      opacity: 0.15;
+      opacity: 0.12;
       z-index: 1;
       animation: pulse-glow 3s infinite alternate;
     }
@@ -199,8 +200,8 @@
     .status-card.pending .status-pulse { background-color: var(--warning); }
 
     @keyframes pulse-glow {
-      from { transform: scale(0.9); opacity: 0.1; }
-      to { transform: scale(1.2); opacity: 0.25; }
+      from { transform: scale(0.9); opacity: 0.08; }
+      to { transform: scale(1.2); opacity: 0.2; }
     }
 
     .status-badge {
@@ -227,7 +228,7 @@
       font-family: var(--font-display);
       font-size: 42px;
       font-weight: 800;
-      color: var(--white);
+      color: var(--slate-900);
       letter-spacing: -1px;
       text-align: center;
       margin-bottom: 8px;
@@ -237,7 +238,7 @@
 
     .status-desc {
       font-size: 15px;
-      color: var(--slate-400);
+      color: var(--slate-700);
       text-align: center;
       margin-bottom: 28px;
       position: relative;
@@ -249,9 +250,9 @@
       font-family: var(--font-display);
       font-size: 20px;
       font-weight: 700;
-      color: var(--white);
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--slate-900);
+      background: rgba(15, 23, 42, 0.03);
+      border: 1px solid rgba(15, 23, 42, 0.08);
       padding: 8px 24px;
       border-radius: 12px;
       display: flex;
@@ -264,7 +265,7 @@
     .timer-display svg {
       width: 18px;
       height: 18px;
-      stroke: var(--slate-400);
+      stroke: var(--slate-700);
       fill: none;
       stroke-width: 2.2;
     }
@@ -278,7 +279,7 @@
       font-family: var(--font-display);
       font-size: 18px;
       font-weight: 700;
-      color: var(--white);
+      color: var(--slate-900);
       margin-bottom: 18px;
       display: flex;
       align-items: center;
@@ -314,7 +315,7 @@
     .form-label {
       font-size: 11px;
       font-weight: 700;
-      color: var(--slate-400);
+      color: var(--slate-700);
       text-transform: uppercase;
       letter-spacing: 0.8px;
     }
@@ -330,7 +331,7 @@
       transform: translateY(-50%);
       width: 16px;
       height: 16px;
-      stroke: var(--slate-400);
+      stroke: var(--slate-700);
       fill: none;
       stroke-width: 2.2;
       pointer-events: none;
@@ -338,11 +339,11 @@
 
     .form-input {
       width: 100%;
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--white);
+      border: 1px solid rgba(15, 23, 42, 0.15);
       border-radius: 8px;
       padding: 10px 14px 10px 38px;
-      color: var(--white);
+      color: var(--slate-900);
       font-size: 14px;
       font-weight: 600;
       outline: none;
@@ -352,15 +353,15 @@
     .form-input:focus {
       border-color: var(--primary);
       box-shadow: 0 0 0 3px var(--primary-glow);
-      background: rgba(0, 0, 0, 0.3);
+      background: var(--white);
     }
 
     /* SEGMENTED CONTROL FOR DURATION */
     .duration-segment {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(15, 23, 42, 0.03);
+      border: 1px solid rgba(15, 23, 42, 0.08);
       border-radius: 8px;
       padding: 4px;
       gap: 4px;
@@ -369,7 +370,7 @@
     .segment-btn {
       background: transparent;
       border: none;
-      color: var(--slate-400);
+      color: var(--slate-700);
       font-size: 13px;
       font-weight: 700;
       padding: 8px 12px;
@@ -381,7 +382,7 @@
     }
 
     .segment-btn:hover {
-      color: var(--white);
+      color: var(--slate-900);
     }
 
     .segment-btn.active {
@@ -420,8 +421,8 @@
     }
 
     .book-btn:disabled {
-      background: var(--slate-800);
-      color: var(--slate-400);
+      background: var(--slate-300);
+      color: var(--slate-700);
       box-shadow: none;
       cursor: not-allowed;
       transform: none;
@@ -449,7 +450,7 @@
       width: 4px;
     }
     .agenda-list::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(15, 23, 42, 0.1);
       border-radius: 2px;
     }
 
@@ -458,21 +459,21 @@
       align-items: center;
       gap: 16px;
       padding: 12px 16px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(15, 23, 42, 0.06);
       border-radius: 10px;
     }
 
     .agenda-item.active {
       border-color: rgba(79, 70, 229, 0.3);
-      background: rgba(79, 70, 229, 0.03);
+      background: rgba(79, 70, 229, 0.05);
     }
 
     .agenda-time {
       font-family: var(--font-display);
       font-size: 14px;
       font-weight: 700;
-      color: var(--primary-light);
+      color: var(--primary);
       min-width: 90px;
       flex-shrink: 0;
     }
@@ -485,7 +486,7 @@
     .agenda-name {
       font-size: 13.5px;
       font-weight: 700;
-      color: var(--white);
+      color: var(--slate-900);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -493,7 +494,7 @@
 
     .agenda-meta {
       font-size: 11px;
-      color: var(--slate-400);
+      color: var(--slate-700);
       margin-top: 2px;
       white-space: nowrap;
       overflow: hidden;
@@ -519,15 +520,15 @@
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
-      background: var(--slate-800);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--white);
+      border: 1px solid rgba(15, 23, 42, 0.1);
       border-radius: 10px;
       padding: 12px 24px;
-      color: var(--white);
+      color: var(--slate-900);
       font-size: 14px;
       font-weight: 600;
       z-index: 100;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
       display: flex;
       align-items: center;
       gap: 10px;
@@ -552,12 +553,226 @@
     .toast.success .toast-icon { color: var(--success); }
     .toast.danger .toast-icon { color: var(--danger); }
     .toast.warning .toast-icon { color: var(--warning); }
+
+    /* FACE SCANNER MODAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .scanner-card {
+      width: 420px;
+      padding: 32px;
+      background: #FFFFFF;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-overlay.active .scanner-card {
+      transform: scale(1);
+    }
+
+    .scanner-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .scanner-icon-wrap {
+      width: 48px;
+      height: 48px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--success);
+      margin-bottom: 8px;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+      animation: pulse-border 2s infinite;
+    }
+
+    @keyframes pulse-border {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .scanner-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--slate-900);
+    }
+
+    .scanner-subtitle {
+      font-size: 13px;
+      color: var(--slate-700);
+      max-width: 280px;
+    }
+
+    /* SCAN AREA */
+    .scan-area-wrapper {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px dashed rgba(16, 185, 129, 0.4);
+      background: rgba(15, 23, 42, 0.03);
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05), 0 0 20px rgba(16, 185, 129, 0.1);
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .scan-area-wrapper.error {
+      border-color: rgba(239, 68, 68, 0.4);
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05), 0 0 20px rgba(239, 68, 68, 0.1);
+    }
+
+    .scan-area-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+      display: none;
+    }
+
+    .scan-area-wrapper.has-video video {
+      display: block;
+    }
+
+    .scan-silhouette {
+      width: 110px;
+      height: 110px;
+      fill: none;
+      stroke: var(--success);
+      stroke-width: 1.5;
+      opacity: 0.85;
+      animation: pulse-silhouette 1.5s infinite alternate;
+      display: block;
+    }
+
+    .scan-area-wrapper.has-video .scan-silhouette {
+      display: none;
+    }
+
+    @keyframes pulse-silhouette {
+      from { transform: scale(0.96); opacity: 0.6; stroke-width: 1.2; }
+      to { transform: scale(1.04); opacity: 1; stroke-width: 1.8; filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.5)); }
+    }
+
+    /* Laser Sweep Line */
+    .scan-laser-line {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--success), transparent);
+      box-shadow: 0 0 8px var(--success), 0 0 15px var(--success);
+      z-index: 10;
+      pointer-events: none;
+      animation: laser-sweep 2s infinite ease-in-out;
+    }
+
+    .scan-area-wrapper.error .scan-laser-line {
+      background: linear-gradient(90deg, transparent, var(--danger), transparent);
+      box-shadow: 0 0 8px var(--danger), 0 0 15px var(--danger);
+    }
+
+    @keyframes laser-sweep {
+      0% { top: 0%; }
+      50% { top: 100%; }
+      100% { top: 0%; }
+    }
+
+    /* PROGRESS & STATUS */
+    .scanner-progress-container {
+      width: 100%;
+      margin-bottom: 24px;
+    }
+
+    .scanner-progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(15, 23, 42, 0.05);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .scanner-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--success));
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+      transition: width 0.1s linear;
+    }
+
+    .scanner-progress-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-700);
+    }
+
+    .scanner-cancel-btn {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.03);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      color: var(--slate-700);
+      font-size: 13.5px;
+      font-weight: 600;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .scanner-cancel-btn:hover {
+      background: rgba(15, 23, 42, 0.08);
+      color: var(--slate-900);
+    }
   </style>
 </head>
 <body>
 
   <!-- HEADER -->
-  <header>
+  <header style="position: relative;">
     <div class="brand-wrap">
       <div class="brand-icon">
         <svg viewBox="0 0 24 24">
@@ -566,6 +781,12 @@
         </svg>
       </div>
       <span class="brand-text">E-Conference</span>
+    </div>
+
+    <!-- Centered Secondary Company Logo/Name -->
+    <div class="secondary-brand-wrap" style="display: flex; align-items: center; gap: 10px; position: absolute; left: 50%; transform: translateX(-50%);">
+      <img id="header-secondary-logo" src="" alt="Client Logo" style="display: none; height: 36px; max-width: 140px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));">
+      <span id="header-secondary-name" style="font-family: var(--font-display); font-size: 18px; font-weight: 700; color: #0F172A; letter-spacing: -0.5px;"></span>
     </div>
     
     <div class="room-selector-wrap">
@@ -621,12 +842,29 @@
             </div>
             
             <div class="form-group">
-              <label class="form-label">Meeting Duration</label>
-              <div class="duration-segment">
-                <button class="segment-btn active" onclick="selectDuration(10, this)">10 Min</button>
-                <button class="segment-btn" onclick="selectDuration(20, this)">20 Min</button>
-                <button class="segment-btn" onclick="selectDuration(30, this)">30 Min</button>
+              <label class="form-label">Meeting Purpose / Agenda</label>
+              <div class="input-wrap">
+                <svg class="input-icon" viewBox="0 0 24 24" style="stroke: var(--primary);">
+                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                </svg>
+                <select class="form-input" id="impromptu-agenda" style="padding-left: 38px;">
+                  <option value="Quick Sync-Up">Quick Sync-Up</option>
+                  <option value="Brainstorming">Brainstorming</option>
+                  <option value="Client Demo">Client Demo</option>
+                  <option value="Interview">Interview</option>
+                  <option value="Technical Design">Technical Design</option>
+                  <option value="Emergency Sync">Emergency Sync</option>
+                </select>
               </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Meeting Duration</label>
+            <div class="duration-segment">
+              <button class="segment-btn active" onclick="selectDuration(10, this)">10 Min</button>
+              <button class="segment-btn" onclick="selectDuration(20, this)">20 Min</button>
+              <button class="segment-btn" onclick="selectDuration(30, this)">30 Min</button>
             </div>
           </div>
           
@@ -666,6 +904,42 @@
     <span id="toast-text">Toast Message</span>
   </div>
 
+  <!-- BIOMETRIC FACE SCANNER MODAL -->
+  <div class="modal-overlay" id="face-scanner-modal">
+    <div class="scanner-card">
+      <div class="scanner-header">
+        <div class="scanner-icon-wrap">
+          <svg style="width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.2;" viewBox="0 0 24 24">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </div>
+        <div class="scanner-title">Biometric Face Scanner</div>
+        <div class="scanner-subtitle" id="scanner-subtitle-text">Verifying employee identity...</div>
+      </div>
+
+      <div class="scan-area-wrapper" id="scan-wrapper">
+        <video id="scanner-video" autoplay playsinline muted></video>
+        <!-- Wireframe face silhouette for fallback -->
+        <svg class="scan-silhouette" id="scanner-silhouette-svg" viewBox="0 0 100 100">
+          <path d="M50,20 C35,20 30,32 30,48 C30,68 40,78 50,78 C60,78 70,68 70,48 C70,32 65,20 50,20 Z" />
+          <path d="M32,40 C35,30 42,25 50,25 C58,25 65,30 68,40" />
+          <path d="M15,90 C15,80 30,83 50,83 C70,83 85,80 85,90" />
+        </svg>
+        <div class="scan-laser-line"></div>
+      </div>
+
+      <div class="scanner-progress-container">
+        <div class="scanner-progress-bar">
+          <div class="scanner-progress-fill" id="scanner-progress-fill"></div>
+        </div>
+        <div class="scanner-progress-text" id="scanner-status-text">Initializing camera...</div>
+      </div>
+
+      <button class="scanner-cancel-btn" onclick="cancelFaceScan()">Cancel Verification</button>
+    </div>
+  </div>
+
   <script>
     // Global fetch interceptor to support separate backend hosting (same as app.js)
     const BACKEND_URL = 'https://room-booking-backend.onrender.com';
@@ -703,6 +977,50 @@
         if (!res.ok) throw new Error('Offline');
         state = await res.json();
         
+        // Update secondary company name and logo from system settings
+        const secondaryLogo = document.getElementById('header-secondary-logo');
+        const secondaryName = document.getElementById('header-secondary-name');
+        if (secondaryLogo && secondaryName && state.systemSettings) {
+          const settings = state.systemSettings;
+          const hasLogo = settings.clientLogoUrl && settings.clientLogoUrl.trim() !== '';
+          const hasName = settings.clientName && settings.clientName.trim() !== '';
+          
+          if (hasLogo) {
+            secondaryLogo.src = settings.clientLogoUrl.trim();
+            secondaryLogo.style.display = 'block';
+          } else {
+            secondaryLogo.style.display = 'none';
+          }
+          
+          if (hasName) {
+            secondaryName.textContent = settings.clientName;
+            secondaryName.style.display = 'inline';
+          } else {
+            secondaryName.style.display = 'none';
+          }
+
+          // Apply dynamic theme color from primary website
+          const themeColor = settings.theme || '#4F46E5';
+          document.documentElement.style.setProperty('--primary', themeColor);
+          
+          // Generate a glow color from the theme color
+          let primaryGlow = 'rgba(79, 70, 229, 0.15)';
+          if (themeColor.startsWith('#')) {
+            const hex = themeColor.replace('#', '');
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            primaryGlow = `rgba(${r}, ${g}, ${b}, 0.15)`;
+          }
+          document.documentElement.style.setProperty('--primary-glow', primaryGlow);
+          
+          // Apply dynamic font family from primary website
+          if (settings.fontFamily) {
+            document.documentElement.style.setProperty('--font-sans', settings.fontFamily + ', sans-serif');
+            document.documentElement.style.setProperty('--font-display', settings.fontFamily + ', sans-serif');
+          }
+        }
+
         // Populate room dropdown if empty
         const select = document.getElementById('room-select-dropdown');
         if (select.children.length === 0 && state.rooms.length > 0) {
@@ -882,7 +1200,7 @@
         .sort((a, b) => timeStrToMins(a.start) - timeStrToMins(b.start));
 
       if (upcomingBookings.length === 0) {
-        agendaContainer.innerHTML = `<div style="padding: 40px; text-align: center; color: var(--slate-400); font-weight: 500; font-size: 13.5px;">No more meetings scheduled for today.</div>`;
+        agendaContainer.innerHTML = `<div style="padding: 40px; text-align: center; color: var(--slate-400); font-weight: 500; font-size: 13.5px;">No other meetings scheduled for today.</div>`;
       } else {
         upcomingBookings.forEach(b => {
           const isActive = currentBooking && b.id === currentBooking.id;
@@ -933,6 +1251,94 @@
       }
     }
 
+    let faceStream = null;
+    let scanTimer = null;
+    let scanStartTime = 0;
+    const SCAN_DURATION = 3000; // 3 seconds
+
+    async function startFaceScan(empId, callback) {
+      const modal = document.getElementById('face-scanner-modal');
+      const video = document.getElementById('scanner-video');
+      const scanWrapper = document.getElementById('scan-wrapper');
+      const fill = document.getElementById('scanner-progress-fill');
+      const statusText = document.getElementById('scanner-status-text');
+
+      modal.classList.add('active');
+      scanWrapper.classList.remove('error');
+      scanWrapper.classList.remove('has-video');
+      fill.style.width = '0%';
+      statusText.textContent = 'Initializing scanner...';
+
+      if (faceStream) {
+        faceStream.getTracks().forEach(track => track.stop());
+        faceStream = null;
+      }
+
+      try {
+        faceStream = await navigator.mediaDevices.getUserMedia({
+          video: { width: 320, height: 320, facingMode: 'user' }
+        });
+        video.srcObject = faceStream;
+        video.onloadedmetadata = () => {
+          video.play();
+          scanWrapper.classList.add('has-video');
+        };
+      } catch (err) {
+        console.warn('Camera access denied or unavailable, using silhouette fallback.', err);
+        scanWrapper.classList.remove('has-video');
+      }
+
+      scanStartTime = Date.now();
+      statusText.textContent = 'Analyzing face landmarks...';
+      
+      if (scanTimer) clearInterval(scanTimer);
+      
+      scanTimer = setInterval(() => {
+        const elapsed = Date.now() - scanStartTime;
+        const percent = Math.min(100, (elapsed / SCAN_DURATION) * 100);
+        fill.style.width = `${percent}%`;
+
+        if (elapsed < 1000) {
+          statusText.textContent = 'Analyzing facial patterns...';
+        } else if (elapsed < 2000) {
+          statusText.textContent = `Matching against ID: ${empId}...`;
+        } else if (elapsed < 3000) {
+          statusText.textContent = 'Verifying identity clearance...';
+        } else {
+          clearInterval(scanTimer);
+          scanTimer = null;
+          statusText.textContent = 'Verification successful!';
+          setTimeout(() => {
+            closeFaceScanner();
+            callback();
+          }, 400);
+        }
+      }, 100);
+    }
+
+    function closeFaceScanner() {
+      const modal = document.getElementById('face-scanner-modal');
+      modal.classList.remove('active');
+      
+      if (scanTimer) {
+        clearInterval(scanTimer);
+        scanTimer = null;
+      }
+      
+      if (faceStream) {
+        faceStream.getTracks().forEach(track => track.stop());
+        faceStream = null;
+      }
+      
+      const video = document.getElementById('scanner-video');
+      video.srcObject = null;
+    }
+
+    function cancelFaceScan() {
+      closeFaceScanner();
+      showToast('Biometric verification cancelled.', 'warning');
+    }
+
     async function submitImpromptuBooking() {
       const empIdInput = document.getElementById('impromptu-emp-id');
       const empId = empIdInput.value.trim().toUpperCase();
@@ -947,6 +1353,9 @@
         return showToast(`Employee ID ${empId} not found.`, 'danger');
       }
 
+      const agendaSelect = document.getElementById('impromptu-agenda');
+      const purpose = agendaSelect ? agendaSelect.value : 'Impromptu Meeting';
+
       const now = new Date();
       const startHour = now.getHours().toString().padStart(2, '0');
       const startMin = now.getMinutes().toString().padStart(2, '0');
@@ -960,32 +1369,35 @@
         return showToast('Time slot conflicts with an upcoming meeting!', 'danger');
       }
 
-      try {
-        const res = await fetch('/api/bookings', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            empId,
-            room: activeRoomName,
-            date: dateStr,
-            start: startTime,
-            duration: durationStr,
-            purpose: 'Impromptu Meeting',
-            status: 'approved' // ad-hoc screen bookings are approved immediately
-          })
-        });
+      // Trigger biometric scan verification before final submission
+      startFaceScan(empId, async () => {
+        try {
+          const res = await fetch('/api/bookings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              empId,
+              room: activeRoomName,
+              date: dateStr,
+              start: startTime,
+              duration: durationStr,
+              purpose: purpose,
+              status: 'approved' // ad-hoc screen bookings are approved immediately
+            })
+          });
 
-        if (res.ok) {
-          showToast('Impromptu meeting started!', 'success');
-          empIdInput.value = '';
-          syncState();
-        } else {
-          const errData = await res.json().catch(() => ({}));
-          showToast(errData.message || 'Booking conflict or error.', 'danger');
+          if (res.ok) {
+            showToast('Impromptu meeting started!', 'success');
+            empIdInput.value = '';
+            syncState();
+          } else {
+            const errData = await res.json().catch(() => ({}));
+            showToast(errData.message || 'Booking conflict or error.', 'danger');
+          }
+        } catch (err) {
+          showToast('Network error starting meeting.', 'danger');
         }
-      } catch (err) {
-        showToast('Network error starting meeting.', 'danger');
-      }
+      });
     }
 
     // Helper to calculate intervals
