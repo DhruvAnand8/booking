@@ -52,6 +52,23 @@ async function fetchState() {
       if (overlay) overlay.style.display = 'none';
       const roleSel = document.getElementById('role-select');
       if (roleSel) roleSel.value = currentRole;
+
+      // Enforce dashboard page access restriction for employee role on initial load
+      const isEmployee = currentUser.role !== 'admin' && currentUser.role !== 'manager' && currentRole !== 'admin' && currentRole !== 'manager';
+      if (isEmployee && currentPage === 'dashboard') {
+        currentPage = 'book';
+        // Set visual side bar states for Book page
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        const navItem = document.getElementById('nav-book');
+        if (navItem) navItem.classList.add('active');
+        document.getElementById('page-title').textContent = 'Book a Room';
+        document.getElementById('page-sub').textContent = 'Submit a booking request';
+        
+        // Render book page division active
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        const targetPage = document.getElementById('page-book');
+        if (targetPage) targetPage.classList.add('active');
+      }
     } else {
       currentUser = null;
       const overlay = document.getElementById('login-overlay');
@@ -93,6 +110,15 @@ function updateGlobalIndicators() {
     adminNav.style.display = 'none';
     if (currentPage === 'admin') showPage('dashboard');
   }
+
+  // Sidebar dashboard display (only admin and managers)
+  const dashboardNav = document.getElementById('nav-dashboard');
+  const isEmployee = currentUser.role !== 'admin' && currentUser.role !== 'manager' && currentRole !== 'admin' && currentRole !== 'manager';
+  if (isEmployee) {
+    if (dashboardNav) dashboardNav.style.display = 'none';
+  } else {
+    if (dashboardNav) dashboardNav.style.display = 'flex';
+  }
   
   // Global lockdown styling and warning displays
   const lockdownIndicator = document.getElementById('lockdown-sidebar-indicator');
@@ -129,6 +155,12 @@ function updateGlobalIndicators() {
 // ======================== NAVIGATION & ROUTING ========================
 
 function showPage(page) {
+  // Prevent employees from accessing dashboard
+  const isEmployee = currentUser && currentUser.role !== 'admin' && currentUser.role !== 'manager' && currentRole !== 'admin' && currentRole !== 'manager';
+  if (isEmployee && page === 'dashboard') {
+    page = 'book';
+  }
+  
   currentPage = page;
   
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));

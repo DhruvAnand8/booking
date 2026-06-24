@@ -38,21 +38,38 @@
 
     body {
       font-family: var(--font-sans);
-      background-color: var(--slate-950);
+      background-color: #0f172a; /* sleek dark backing background */
       color: var(--slate-900);
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: var(--slate-100);
+      border: 12px solid #1e293b;
+      border-radius: 48px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
       display: flex;
       flex-direction: column;
+      overflow: hidden;
+      position: relative;
     }
 
     header {
-      padding: 20px 40px;
-      background: rgba(255, 255, 255, 0.8);
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(15, 23, 42, 0.08);
       display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
       justify-content: space-between;
       align-items: center;
       z-index: 10;
@@ -126,24 +143,13 @@
 
     main {
       flex: 1;
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 24px;
-      padding: 24px 40px;
-      height: calc(100vh - 81px);
-    }
-
-    .left-column {
       display: flex;
       flex-direction: column;
-      gap: 24px;
-    }
-
-    .right-column {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
+      gap: 16px;
+      padding: 16px;
       overflow-y: auto;
+      background: var(--slate-50);
+      -webkit-overflow-scrolling: touch;
     }
 
     /* CARD STYLE */
@@ -528,7 +534,7 @@
 
     /* TOAST */
     .toast {
-      position: fixed;
+      position: absolute;
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
@@ -568,11 +574,11 @@
 
     /* FACE SCANNER MODAL */
     .modal-overlay {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       background: rgba(15, 23, 42, 0.4);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
@@ -779,43 +785,171 @@
       background: rgba(15, 23, 42, 0.08);
       color: var(--slate-900);
     }
+
+    /* PHONE SIZE RESPONSIVE DISPLAY STYLES */
+    @media (max-width: 768px) {
+      body {
+        height: auto;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      header {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: space-between;
+      }
+
+      .brand-wrap {
+        gap: 8px;
+      }
+
+      .brand-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+      }
+
+      .brand-icon svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .brand-text {
+        font-size: 16px;
+      }
+
+      .secondary-brand-wrap {
+        position: static !important;
+        transform: none !important;
+        width: 100%;
+        justify-content: center;
+        order: 3;
+        padding-top: 8px;
+        border-top: 1px solid rgba(15, 23, 42, 0.05);
+      }
+
+      #header-secondary-logo {
+        height: 28px;
+        max-width: 110px;
+      }
+
+      #header-secondary-name {
+        font-size: 15px;
+      }
+
+      .room-selector-wrap {
+        gap: 8px;
+      }
+
+      .room-selector-label {
+        font-size: 10px;
+        letter-spacing: 0.5px;
+      }
+
+      .room-select {
+        padding: 6px 12px;
+        font-size: 13px;
+        border-radius: 6px;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 16px;
+        height: auto;
+      }
+
+      .status-card {
+        padding: 24px 16px;
+      }
+
+      .status-badge {
+        font-size: 13px;
+        padding: 6px 14px;
+        margin-bottom: 16px;
+      }
+
+      .status-title {
+        font-size: 28px;
+        margin-bottom: 6px;
+      }
+
+      .status-desc {
+        font-size: 13px;
+        margin-bottom: 20px;
+      }
+
+      .timer-display {
+        font-size: 15px;
+        padding: 6px 16px;
+      }
+
+      .quick-book-card {
+        padding: 20px 16px;
+      }
+
+      .form-row-layout {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .agenda-card {
+        padding: 20px 16px;
+      }
+
+      .scanner-card {
+        width: 90%;
+        max-width: 420px;
+        padding: 24px 16px;
+      }
+
+      .scan-area-wrapper {
+        width: 160px;
+        height: 160px;
+      }
+
+      .scan-silhouette {
+        width: 90px;
+        height: 90px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header style="position: relative;">
-    <div class="brand-wrap">
-      <div class="brand-icon">
-        <svg viewBox="0 0 24 24">
-          <rect x="3" y="3" width="18" height="18" rx="4"/>
-          <path d="M9 9h6M9 13h6M9 17h4"/>
-        </svg>
+  <div class="phone-frame">
+    <!-- HEADER -->
+    <header style="position: relative;">
+      <div class="brand-wrap">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="4"/>
+            <path d="M9 9h6M9 13h6M9 17h4"/>
+          </svg>
+        </div>
+        <span class="brand-text">E-Conference</span>
       </div>
-      <span class="brand-text">E-Conference</span>
-    </div>
 
-    <!-- Centered Secondary Company Logo/Name -->
-    <div class="secondary-brand-wrap" style="display: flex; align-items: center; gap: 10px; position: absolute; left: 50%; transform: translateX(-50%);">
-      <img id="header-secondary-logo" src="" alt="Client Logo" style="display: none; height: 36px; max-width: 140px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));">
-      <span id="header-secondary-name" style="font-family: var(--font-display); font-size: 18px; font-weight: 700; color: #0F172A; letter-spacing: -0.5px;"></span>
-    </div>
-    
-    <div class="room-selector-wrap">
-      <span class="room-selector-label">Display Screen For:</span>
-      <select class="room-select" id="room-select-dropdown" onchange="changeActiveRoom(this.value)">
-        <!-- Loaded dynamically -->
-      </select>
-    </div>
-  </header>
-
-  <!-- MAIN AREA -->
-  <main>
-    
-    <!-- LEFT COLUMN: Live Status & Impromptu -->
-    <div class="left-column">
+      <!-- Centered Secondary Company Logo/Name -->
+      <div class="secondary-brand-wrap" style="display: flex; align-items: center; gap: 10px;">
+        <img id="header-secondary-logo" src="" alt="Client Logo" style="display: none; height: 36px; max-width: 140px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));">
+        <span id="header-secondary-name" style="font-family: var(--font-display); font-size: 18px; font-weight: 700; color: #0F172A; letter-spacing: -0.5px;"></span>
+      </div>
       
-      <!-- Live Status Card -->
+      <div class="room-selector-wrap">
+        <span class="room-selector-label">Display:</span>
+        <select class="room-select" id="room-select-dropdown" onchange="changeActiveRoom(this.value)">
+          <!-- Loaded dynamically -->
+        </select>
+      </div>
+    </header>
+
+    <!-- MAIN AREA -->
+    <main>
+      
+      <!-- 1. Live Status Card (Availability) -->
       <div class="glass-card status-card available" id="status-card-display">
         <div class="status-pulse"></div>
         <div class="status-badge" id="status-badge-text">Available</div>
@@ -831,7 +965,24 @@
         </div>
       </div>
 
-      <!-- Impromptu Card -->
+      <!-- 2. Today's Upcoming Agenda Card (Upcoming) -->
+      <div class="glass-card agenda-card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" style="stroke: var(--warning);">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <span>Today's Upcoming Agenda</span>
+        </div>
+        
+        <div class="agenda-list" id="upcoming-agenda-list">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+
+      <!-- 3. Quick Impromptu Meeting Card -->
       <div class="glass-card quick-book-card">
         <div class="card-title">
           <svg viewBox="0 0 24 24">
@@ -889,66 +1040,48 @@
         </div>
       </div>
 
+    </main>
+
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast" id="toast-notification">
+      <!-- Icon injected dynamically -->
+      <span id="toast-text">Toast Message</span>
     </div>
 
-    <!-- RIGHT COLUMN: Agenda -->
-    <div class="glass-card agenda-card">
-      <div class="card-title">
-        <svg viewBox="0 0 24 24" style="stroke: var(--warning);">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-          <line x1="16" y1="2" x2="16" y2="6"/>
-          <line x1="8" y1="2" x2="8" y2="6"/>
-          <line x1="3" y1="10" x2="21" y2="10"/>
-        </svg>
-        <span>Today's Upcoming Agenda</span>
-      </div>
-      
-      <div class="agenda-list" id="upcoming-agenda-list">
-        <!-- Loaded dynamically -->
-      </div>
-    </div>
+    <!-- BIOMETRIC FACE SCANNER MODAL -->
+    <div class="modal-overlay" id="face-scanner-modal">
+      <div class="scanner-card">
+        <div class="scanner-header">
+          <div class="scanner-icon-wrap">
+            <svg style="width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.2;" viewBox="0 0 24 24">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+          </div>
+          <div class="scanner-title">Biometric Face Scanner</div>
+          <div class="scanner-subtitle" id="scanner-subtitle-text">Verifying employee identity...</div>
+        </div>
 
-  </main>
-
-  <!-- TOAST NOTIFICATION -->
-  <div class="toast" id="toast-notification">
-    <!-- Icon injected dynamically -->
-    <span id="toast-text">Toast Message</span>
-  </div>
-
-  <!-- BIOMETRIC FACE SCANNER MODAL -->
-  <div class="modal-overlay" id="face-scanner-modal">
-    <div class="scanner-card">
-      <div class="scanner-header">
-        <div class="scanner-icon-wrap">
-          <svg style="width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.2;" viewBox="0 0 24 24">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-            <circle cx="12" cy="13" r="4"/>
+        <div class="scan-area-wrapper" id="scan-wrapper">
+          <video id="scanner-video" autoplay playsinline muted></video>
+          <!-- Wireframe face silhouette for fallback -->
+          <svg class="scan-silhouette" id="scanner-silhouette-svg" viewBox="0 0 100 100">
+            <path d="M50,20 C35,20 30,32 30,48 C30,68 40,78 50,78 C60,78 70,68 70,48 C70,32 65,20 50,20 Z" />
+            <path d="M32,40 C35,30 42,25 50,25 C58,25 65,30 68,40" />
+            <path d="M15,90 C15,80 30,83 50,83 C70,83 85,80 85,90" />
           </svg>
+          <div class="scan-laser-line"></div>
         </div>
-        <div class="scanner-title">Biometric Face Scanner</div>
-        <div class="scanner-subtitle" id="scanner-subtitle-text">Verifying employee identity...</div>
-      </div>
 
-      <div class="scan-area-wrapper" id="scan-wrapper">
-        <video id="scanner-video" autoplay playsinline muted></video>
-        <!-- Wireframe face silhouette for fallback -->
-        <svg class="scan-silhouette" id="scanner-silhouette-svg" viewBox="0 0 100 100">
-          <path d="M50,20 C35,20 30,32 30,48 C30,68 40,78 50,78 C60,78 70,68 70,48 C70,32 65,20 50,20 Z" />
-          <path d="M32,40 C35,30 42,25 50,25 C58,25 65,30 68,40" />
-          <path d="M15,90 C15,80 30,83 50,83 C70,83 85,80 85,90" />
-        </svg>
-        <div class="scan-laser-line"></div>
-      </div>
-
-      <div class="scanner-progress-container">
-        <div class="scanner-progress-bar">
-          <div class="scanner-progress-fill" id="scanner-progress-fill"></div>
+        <div class="scanner-progress-container">
+          <div class="scanner-progress-bar">
+            <div class="scanner-progress-fill" id="scanner-progress-fill"></div>
+          </div>
+          <div class="scanner-progress-text" id="scanner-status-text">Initializing camera...</div>
         </div>
-        <div class="scanner-progress-text" id="scanner-status-text">Initializing camera...</div>
-      </div>
 
-      <button class="scanner-cancel-btn" onclick="cancelFaceScan()">Cancel Verification</button>
+        <button class="scanner-cancel-btn" onclick="cancelFaceScan()">Cancel Verification</button>
+      </div>
     </div>
   </div>
 

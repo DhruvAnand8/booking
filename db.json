@@ -651,6 +651,20 @@
   },
   "auditLogs": [
     {
+      "id": 162,
+      "timestamp": "2026-06-24T05:43:15.800Z",
+      "action": "USER_LOGIN",
+      "user": "Vikram Singh",
+      "details": "Vikram Singh (admin) logged in successfully via 2FA."
+    },
+    {
+      "id": 161,
+      "timestamp": "2026-06-24T05:26:04.902Z",
+      "action": "USER_LOGIN",
+      "user": "Arjun Kapoor",
+      "details": "Arjun Kapoor (employee) logged in successfully via 2FA."
+    },
+    {
       "id": 160,
       "timestamp": "2026-06-24T04:44:31.195Z",
       "action": "AUTO_APPROVE",
